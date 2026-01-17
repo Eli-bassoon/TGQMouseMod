@@ -136,6 +136,7 @@ label(code)
 label(return)
 
 newmem:
+push [esi+2f8]
 push esi
 call orbitCamera
 
@@ -364,6 +365,7 @@ label(code)
 label(return)
 
 newmem:
+push [esi+2f8]
 call freelookCamera
 
 code:
@@ -694,6 +696,16 @@ GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>frogPtr</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>120</ID>
+      <Description>"Delta Time"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>cameraPtr</Address>
+      <Offsets>
+        <Offset>2f8</Offset>
+      </Offsets>
     </CheatEntry>
     <CheatEntry>
       <ID>112</ID>

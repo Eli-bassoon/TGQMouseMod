@@ -46,6 +46,7 @@ DEFINE_INJECT_WRAPPER(
 	6,
 	ASM(
 
+__asm push [esi + 0x2f8]
 __asm push esi
 __asm call orbitCamera
 __asm jmp [InjectOrbitCameraActualJump]
@@ -101,6 +102,7 @@ DEFINE_INJECT_WRAPPER(
 	60,
 	ASM(
 
+__asm push[esi + 0x2f8]
 __asm call freelookCamera
 
 	)

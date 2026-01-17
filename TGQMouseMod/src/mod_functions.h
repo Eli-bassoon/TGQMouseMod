@@ -23,8 +23,8 @@ void __declspec(dllexport) __stdcall storeMousePos();
 
 int __declspec(dllexport) __stdcall storeMouseClick();
 
-void __declspec(dllexport) __stdcall orbitCamera(char* camera);
+void __declspec(dllexport) __stdcall orbitCamera(char* camera, float deltaTime);
 
-void __declspec(dllexport)  __stdcall freelookCamera();
+void __declspec(dllexport)  __stdcall freelookCamera(float deltaTime);
 
 void __declspec(dllexport) __stdcall testApplyQueuedSpin();

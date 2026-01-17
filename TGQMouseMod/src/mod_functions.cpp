@@ -23,18 +23,18 @@ __declspec(dllexport) char** gameSystemPtrLoc = reinterpret_cast<char**>(0x004e4
 __declspec(dllexport) bool captureCursor = true;
 
 // Free look
-__declspec(dllexport) float freelookScaleX = 600.0f;
-__declspec(dllexport) float freelookScaleY = -500.0f;
+__declspec(dllexport) float freelookScaleX = 1200.0f;
+__declspec(dllexport) float freelookScaleY = -900.0f;
 
-__declspec(dllexport) float freelookMaxSpeedX = 0.25f;
-__declspec(dllexport) float freelookMaxSpeedY = 0.2f;
+__declspec(dllexport) float freelookMaxSpeedX = 0.15f;
+__declspec(dllexport) float freelookMaxSpeedY = 0.1f;
 
 // Orbit
-__declspec(dllexport) float orbitScaleX = 600.0f;
-__declspec(dllexport) float orbitScaleY = -500.0f;
+__declspec(dllexport) float orbitScaleX = 900.0f;
+__declspec(dllexport) float orbitScaleY = -700.0f;
 
-__declspec(dllexport) float orbitMaxSpeedX = 0.4f;
-__declspec(dllexport) float orbitMaxSpeedY = 0.25f;
+__declspec(dllexport) float orbitMaxSpeedX = 0.3f;
+__declspec(dllexport) float orbitMaxSpeedY = 0.2f;
 
 __declspec(dllexport) float orbitPitchClampOffset = 0.1f;
 
@@ -183,15 +183,15 @@ float prevYaw = 0.0f;
 float prevPitch = 0.0f;
 
 // Orbiting camera control with mouse
-void __stdcall orbitCamera(char* camera) {
+void __stdcall orbitCamera(char* camera, float deltaTime) {
     cameraPtr = camera;
 
     prevYaw = cameraYaw;
     prevPitch = cameraPitch;
 
     // Add mouse coordinates and clamp
-    cameraYaw += clamp(static_cast<float>(mouseDx) / orbitScaleX, -orbitMaxSpeedX, orbitMaxSpeedX);
-    cameraPitch += clamp(static_cast<float>(mouseDy) / orbitScaleY, -orbitMaxSpeedY, orbitMaxSpeedY);
+    cameraYaw += clamp(static_cast<float>(mouseDx) * deltaTime / orbitScaleX, -orbitMaxSpeedX, orbitMaxSpeedX);
+    cameraPitch += clamp(static_cast<float>(mouseDy) * deltaTime / orbitScaleY, -orbitMaxSpeedY, orbitMaxSpeedY);
 
     //cameraYaw = wrapToPi(cameraYaw);
     //cameraPitch = clamp(cameraPitch, orbitPitchClampOffset, PI - orbitPitchClampOffset);
@@ -236,13 +236,13 @@ void __stdcall orbitCamera(char* camera) {
 }
 
 // First-person freelook control with mouse
-void __stdcall freelookCamera() {
+void __stdcall freelookCamera(float deltaTime) {
     prevYaw = cameraYaw;
     prevPitch = cameraPitch;
 
     // Add mouse coordinates and clamp
-    cameraYaw += clamp(static_cast<float>(mouseDx) / freelookScaleX, -freelookMaxSpeedX, freelookMaxSpeedX);
-    cameraPitch += clamp(static_cast<float>(mouseDy) / freelookScaleY, -freelookMaxSpeedY, freelookMaxSpeedY);
+    cameraYaw += clamp(static_cast<float>(mouseDx) * deltaTime / freelookScaleX, -freelookMaxSpeedX, freelookMaxSpeedX);
+    cameraPitch += clamp(static_cast<float>(mouseDy) * deltaTime / freelookScaleY, -freelookMaxSpeedY, freelookMaxSpeedY);
 
     cameraYaw = wrapToPi(prevYaw * 0.1f + cameraYaw * 0.9f);
     cameraPitch = clamp(prevPitch * 0.1f + cameraPitch * 0.9f, orbitPitchClampOffset, PI - orbitPitchClampOffset);
