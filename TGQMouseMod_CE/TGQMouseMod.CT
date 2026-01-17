@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="46">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>116</ID>
+      <Description>"Tweaks - ACTIVATE ME"</Description>
+      <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>113</ID>
+          <Description>"Hook Mouse Input"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-13
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+A03D)
+define(bytes,33 F6 FF D7 F6 C4 80)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+call storeMousePos
+
+call storeMouseClick
+mov ebx,eax
+
+code:
+  xor esi,esi
+  call edi
+  test ah,-80
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // xor esi,esi
+  // call edi
+  // test ah,-80
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+903D
+
+GreatQuest.exe.text+902A: 90              - nop 
+GreatQuest.exe.text+902B: 90              - nop 
+GreatQuest.exe.text+902C: 90              - nop 
+GreatQuest.exe.text+902D: 90              - nop 
+GreatQuest.exe.text+902E: 90              - nop 
+GreatQuest.exe.text+902F: 90              - nop 
+GreatQuest.exe.text+9030: E9 CB 5F CD 0E  - jmp 0F0E0000
+GreatQuest.exe.text+9035: 0F 1F 40 00     - nop dword ptr [eax+00]
+GreatQuest.exe.text+9039: 6A 12           - push 12
+GreatQuest.exe.text+903B: 33 DB           - xor ebx,ebx
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+903D: 33 F6           - xor esi,esi
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+903F: FF D7           - call edi
+GreatQuest.exe.text+9041: F6 C4 80        - test ah,-80
+GreatQuest.exe.text+9044: 74 0E           - je GreatQuest.exe.text+9054
+GreatQuest.exe.text+9046: 6A 09           - push 09
+GreatQuest.exe.text+9048: FF D7           - call edi
+GreatQuest.exe.text+904A: F6 C4 80        - test ah,-80
+GreatQuest.exe.text+904D: 74 05           - je GreatQuest.exe.text+9054
+GreatQuest.exe.text+904F: BE 01 00 00 00  - mov esi,00000001
+GreatQuest.exe.text+9054: 6A 11           - push 11
+GreatQuest.exe.text+9056: FF D7           - call edi
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>74</ID>
+          <Description>"Look At Frogger"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>loadlibrary(MouseMod.dll)
+
+[ENABLE]
+"GreatQuest.exe.text"+461B7:
+mov eax,[esi+00000268]
+mov [esp+1C],eax
+//mov eax,[esi+0000026C]
+mov eax,[cameraFocusY]
+mov [esp+20],eax
+mov eax,[esi+00000270]
+
+[DISABLE]
+"GreatQuest.exe.text"+461B7:
+mov eax,[esi+00000278]
+mov [esp+1C],eax
+mov eax,[esi+00000298]
+mov [esp+20],eax
+mov eax,[esi+000002b8]
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>103</ID>
+          <Description>"Orbit Camera"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-12
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+46382)
+define(bytes,8B 86 FC 02 00 00)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+push esi
+call orbitCamera
+
+code:
+  jmp 00446345 // Clean up entire function
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov eax,[esi+000002FC]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+45382
+
+GreatQuest.exe.text+4536A: 55                 - push ebp
+GreatQuest.exe.text+4536B: 8B CE              - mov ecx,esi
+GreatQuest.exe.text+4536D: E8 AE 05 00 00     - call GreatQuest.exe.text+45920
+GreatQuest.exe.text+45372: EB D1              - jmp GreatQuest.exe.text+45345
+GreatQuest.exe.text+45374: A8 10              - test al,10
+GreatQuest.exe.text+45376: 74 0A              - je GreatQuest.exe.text+45382
+GreatQuest.exe.text+45378: 55                 - push ebp
+GreatQuest.exe.text+45379: 8B CE              - mov ecx,esi
+GreatQuest.exe.text+4537B: E8 20 09 00 00     - call GreatQuest.exe.text+45CA0
+GreatQuest.exe.text+45380: EB C3              - jmp GreatQuest.exe.text+45345
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+45382: 8B 86 FC 02 00 00  - mov eax,[esi+000002FC]
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+45388: F6 C4 01           - test ah,01
+GreatQuest.exe.text+4538B: 0F 84 AE 00 00 00  - je GreatQuest.exe.text+4543F
+GreatQuest.exe.text+45391: 8D 8E 68 02 00 00  - lea ecx,[esi+00000268]
+GreatQuest.exe.text+45397: 80 E4 FE           - and ah,-02
+GreatQuest.exe.text+4539A: 8B D1              - mov edx,ecx
+GreatQuest.exe.text+4539C: 89 86 FC 02 00 00  - mov [esi+000002FC],eax
+GreatQuest.exe.text+453A2: 8B 02              - mov eax,[edx]
+GreatQuest.exe.text+453A4: 8B 4A 04           - mov ecx,[edx+04]
+GreatQuest.exe.text+453A7: 89 4C 24 18        - mov [esp+18],ecx
+GreatQuest.exe.text+453AB: 8B 4A 08           - mov ecx,[edx+08]
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>77</ID>
+          <Description>"Grab Frog Pointer"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-11
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+70113)
+define(bytes,57 8B 9E C8 00 00 00)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+mov [frogPtr],esi
+
+code:
+  push edi
+  mov ebx,[esi+000000C8]
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // push edi
+  // mov ebx,[esi+000000C8]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+6F113
+
+GreatQuest.exe.text+6F0F6: 6A FF                          - push -01
+GreatQuest.exe.text+6F0F8: 68 E8 B5 4A 00                 - push GreatQuest.exe.text+AA5E8
+GreatQuest.exe.text+6F0FD: 64 A1 00 00 00 00              - mov eax,fs:[00000000]
+GreatQuest.exe.text+6F103: 50                             - push eax
+GreatQuest.exe.text+6F104: 64 89 25 00 00 00 00           - mov fs:[00000000],esp
+GreatQuest.exe.text+6F10B: 83 EC 38                       - sub esp,38
+GreatQuest.exe.text+6F10E: 53                             - push ebx
+GreatQuest.exe.text+6F10F: 55                             - push ebp
+GreatQuest.exe.text+6F110: 56                             - push esi
+GreatQuest.exe.text+6F111: 8B F1                          - mov esi,ecx
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+6F113: 57                             - push edi
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+6F114: 8B 9E C8 00 00 00              - mov ebx,[esi+000000C8]
+GreatQuest.exe.text+6F11A: 8B CB                          - mov ecx,ebx
+GreatQuest.exe.text+6F11C: 89 5C 24 1C                    - mov [esp+1C],ebx
+GreatQuest.exe.text+6F120: 8B 03                          - mov eax,[ebx]
+GreatQuest.exe.text+6F122: FF 90 A8 00 00 00              - call dword ptr [eax+000000A8]
+GreatQuest.exe.text+6F128: 85 C0                          - test eax,eax
+GreatQuest.exe.text+6F12A: 0F 85 CB 06 00 00              - jne GreatQuest.exe.text+6F7FB
+GreatQuest.exe.text+6F130: F7 83 AC 02 00 00 00 00 01 00  - test [ebx+000002AC],00010000
+GreatQuest.exe.text+6F13A: 0F 85 BB 06 00 00              - jne GreatQuest.exe.text+6F7FB
+GreatQuest.exe.text+6F140: E8 1B 54 FA FF                 - call GreatQuest.exe.text+14560
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>87</ID>
+          <Description>"Freelook Transition"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-12
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+46D4D)
+define(bytes,D9 05 64 77 4B 00)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+mov eax,[esi+17c]
+mov [esi+178],eax
+
+mov eax,[esi+19c]
+mov [esi+198],eax
+
+mov eax,[esi+1bc]
+mov [esi+1b8],eax
+
+code:
+  fld dword ptr [GreatQuest.exe.rdata+9764]
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // fld dword ptr [GreatQuest.exe.rdata+9764]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+45D4D
+
+GreatQuest.exe.text+45D28: E8 83 7A 05 00     - call GreatQuest.exe.text+9D7B0
+GreatQuest.exe.text+45D2D: D9 44 24 44        - fld dword ptr [esp+44]
+GreatQuest.exe.text+45D31: D8 05 38 78 4B 00  - fadd dword ptr [GreatQuest.exe.rdata+9838]
+GreatQuest.exe.text+45D37: 8B 16              - mov edx,[esi]
+GreatQuest.exe.text+45D39: 83 C4 10           - add esp,10
+GreatQuest.exe.text+45D3C: 8D 44 24 30        - lea eax,[esp+30]
+GreatQuest.exe.text+45D40: 8B CE              - mov ecx,esi
+GreatQuest.exe.text+45D42: 50                 - push eax
+GreatQuest.exe.text+45D43: D9 5C 24 38        - fstp dword ptr [esp+38]
+GreatQuest.exe.text+45D47: FF 92 94 00 00 00  - call dword ptr [edx+00000094]
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+45D4D: D9 05 64 77 4B 00  - fld dword ptr [GreatQuest.exe.rdata+9764]
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+45D53: D8 8E F8 02 00 00  - fmul dword ptr [esi+000002F8]
+GreatQuest.exe.text+45D59: 8D 8E 78 01 00 00  - lea ecx,[esi+00000178]
+GreatQuest.exe.text+45D5F: D9 5C 24 10        - fstp dword ptr [esp+10]
+GreatQuest.exe.text+45D63: 8B 7C 24 10        - mov edi,[esp+10]
+GreatQuest.exe.text+45D67: 57                 - push edi
+GreatQuest.exe.text+45D68: 68 00 00 80 3F     - push 3F800000
+GreatQuest.exe.text+45D6D: 68 60 35 42 00     - push GreatQuest.exe.text+22560
+GreatQuest.exe.text+45D72: E8 09 B2 FF FF     - call GreatQuest.exe.text+40F80
+GreatQuest.exe.text+45D77: 57                 - push edi
+GreatQuest.exe.text+45D78: 68 00 00 80 3F     - push 3F800000
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>92</ID>
+          <Description>"Freelook Camera"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-12
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+46ED9)
+define(bytes,8B 6C 24 10 55 68 00 00 80 3F 68 C0 35 42 00 E8 93 B0 FF FF 55 68 00 00 80 3F 68 C0 35 42 00 8B CB E8 81 B0 FF FF 55 68 00 00 80 3F 8D 8E 18 02 00 00 68 C0 35 42 00 E8 6B B0 FF FF)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+call freelookCamera
+
+code:
+  jmp return
+
+address:
+  jmp newmem
+  nop 37
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov ebp,[esp+10]
+  // push ebp
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+45ED9
+
+GreatQuest.exe.text+45EBA: 83 C4 20           - add esp,20
+GreatQuest.exe.text+45EBD: 51                 - push ecx
+GreatQuest.exe.text+45EBE: 52                 - push edx
+GreatQuest.exe.text+45EBF: 50                 - push eax
+GreatQuest.exe.text+45EC0: 8B CE              - mov ecx,esi
+GreatQuest.exe.text+45EC2: E8 F9 EB FF FF     - call GreatQuest.exe.text+44AC0
+GreatQuest.exe.text+45EC7: D9 05 0C 77 4B 00  - fld dword ptr [GreatQuest.exe.rdata+970C]
+GreatQuest.exe.text+45ECD: D8 8E F8 02 00 00  - fmul dword ptr [esi+000002F8]
+GreatQuest.exe.text+45ED3: 8B CF              - mov ecx,edi
+GreatQuest.exe.text+45ED5: D9 5C 24 10        - fstp dword ptr [esp+10]
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+45ED9: 8B 6C 24 10        - mov ebp,[esp+10]
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+45EDD: 55                 - push ebp
+GreatQuest.exe.text+45EDE: 68 00 00 80 3F     - push 3F800000
+GreatQuest.exe.text+45EE3: 68 C0 35 42 00     - push GreatQuest.exe.text+225C0
+GreatQuest.exe.text+45EE8: E8 93 B0 FF FF     - call GreatQuest.exe.text+40F80
+GreatQuest.exe.text+45EED: 55                 - push ebp
+GreatQuest.exe.text+45EEE: 68 00 00 80 3F     - push 3F800000
+GreatQuest.exe.text+45EF3: 68 C0 35 42 00     - push GreatQuest.exe.text+225C0
+GreatQuest.exe.text+45EF8: 8B CB              - mov ecx,ebx
+GreatQuest.exe.text+45EFA: E8 81 B0 FF FF     - call GreatQuest.exe.text+40F80
+GreatQuest.exe.text+45EFF: 55                 - push ebp
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>109</ID>
+          <Description>"Aim Goober Orbit"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-12
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+6D9E3)
+define(bytes,8B 96 88 00 00 00)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+// Queue moving Frogger forward
+mov [queuedSpin],1
+
+// Get the yaw
+mov edx,[frogNewYaw]
+
+code:
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov edx,[esi+00000088]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+6C9E3
+
+GreatQuest.exe.text+6C9B7: 68 33 33 B3 BF        - push BFB33333
+GreatQuest.exe.text+6C9BC: 68 00 00 00 40        - push 40000000
+GreatQuest.exe.text+6C9C1: E8 6E 1B 02 00        - call GreatQuest.exe.text+8E534
+GreatQuest.exe.text+6C9C6: D9 5C 24 20           - fstp dword ptr [esp+20]
+GreatQuest.exe.text+6C9CA: D9 44 24 20           - fld dword ptr [esp+20]
+GreatQuest.exe.text+6C9CE: 8D 84 24 CC 00 00 00  - lea eax,[esp+000000CC]
+GreatQuest.exe.text+6C9D5: D9 5C 24 20           - fstp dword ptr [esp+20]
+GreatQuest.exe.text+6C9D9: 50                    - push eax
+GreatQuest.exe.text+6C9DA: E8 01 03 03 00        - call GreatQuest.exe.text+9CCE0
+GreatQuest.exe.text+6C9DF: D9 44 24 24           - fld dword ptr [esp+24]
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+6C9E3: 8B 96 88 00 00 00     - mov edx,[esi+00000088]
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+6C9E9: 8B 44 24 38           - mov eax,[esp+38]
+GreatQuest.exe.text+6C9ED: D9 E0                 - fchs 
+GreatQuest.exe.text+6C9EF: D9 9C 24 F4 00 00 00  - fstp dword ptr [esp+000000F4]
+GreatQuest.exe.text+6C9F6: 8B 4C 24 24           - mov ecx,[esp+24]
+GreatQuest.exe.text+6C9FA: 89 54 24 38           - mov [esp+38],edx
+GreatQuest.exe.text+6C9FE: D9 44 24 38           - fld dword ptr [esp+38]
+GreatQuest.exe.text+6CA02: 89 84 24 E4 00 00 00  - mov [esp+000000E4],eax
+GreatQuest.exe.text+6CA09: 89 84 24 F8 00 00 00  - mov [esp+000000F8],eax
+GreatQuest.exe.text+6CA10: DD 5C 24 28           - fstp qword ptr [esp+28]
+GreatQuest.exe.text+6CA14: 8B 7C 24 2C           - mov edi,[esp+2C]
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>111</ID>
+          <Description>"Apply Queued Goober Spin"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-12
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+71336)
+define(bytes,6A FF 68 70 B6 4A 00)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+loadlibrary(MouseMod.dll)
+
+label(code)
+label(return)
+
+newmem:
+call testApplyQueuedSpin
+
+code:
+  push -01
+  push GreatQuest.exe.text+AA670
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // push -01
+  // push GreatQuest.exe.text+AA670
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+70336
+
+GreatQuest.exe.text+70314: 8B 8E AC 02 00 00              - mov ecx,[esi+000002AC]
+GreatQuest.exe.text+7031A: 89 8F 54 03 00 00              - mov [edi+00000354],ecx
+GreatQuest.exe.text+70320: C7 87 50 03 00 00 10 00 00 00  - mov [edi+00000350],00000010
+GreatQuest.exe.text+7032A: 5F                             - pop edi
+GreatQuest.exe.text+7032B: 5E                             - pop esi
+GreatQuest.exe.text+7032C: 59                             - pop ecx
+GreatQuest.exe.text+7032D: C2 04 00                       - ret 0004
+GreatQuest.exe.text+70330: 55                             - push ebp
+GreatQuest.exe.text+70331: 8B EC                          - mov ebp,esp
+GreatQuest.exe.text+70333: 83 E4 F8                       - and esp,-08
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+70336: 6A FF                          - push -01
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+70338: 68 70 B6 4A 00                 - push GreatQuest.exe.text+AA670
+GreatQuest.exe.text+7033D: 64 A1 00 00 00 00              - mov eax,fs:[00000000]
+GreatQuest.exe.text+70343: 50                             - push eax
+GreatQuest.exe.text+70344: 64 89 25 00 00 00 00           - mov fs:[00000000],esp
+GreatQuest.exe.text+7034B: 83 EC 64                       - sub esp,64
+GreatQuest.exe.text+7034E: 53                             - push ebx
+GreatQuest.exe.text+7034F: 56                             - push esi
+GreatQuest.exe.text+70350: 8B F1                          - mov esi,ecx
+GreatQuest.exe.text+70352: 57                             - push edi
+GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C8]
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>119</ID>
+      <Description>"Capture Mouse Cursor"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>captureCursor</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>20</ID>
+      <Description>"Pressed Keys"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>GreatQuest.exe+DC44C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"Inverted Keys"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>004DC450</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>31</ID>
+      <Description>"Mouse X"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>mouseX</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>32</ID>
+      <Description>"Mouse Y"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>mouseY</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>117</ID>
+      <Description>"Freelook Settings"</Description>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>34</ID>
+          <Description>"Freelook Scale X"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>freeLookScaleX</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>94</ID>
+          <Description>"Freelook Scale Y"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>freelookScaleY</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>35</ID>
+          <Description>"Freelook Max Speed X"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>freelookMaxSpeedX</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>95</ID>
+          <Description>"Freelook Max Speed Y"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>freelookMaxSpeedY</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>118</ID>
+      <Description>"Orbit Settings"</Description>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>42</ID>
+          <Description>"Orbit Scale X"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>orbitScaleX</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>64</ID>
+          <Description>"Orbit Scale Y"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>orbitScaleY</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>43</ID>
+          <Description>"Orbit Max Speed X"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>orbitMaxSpeedX</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>65</ID>
+          <Description>"Orbit Max Speed Y"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>orbitMaxSpeedY</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>75</ID>
+          <Description>"Orbit Distance"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>maxOrbitDist</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>66</ID>
+      <Description>"Camera Pointer"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>cameraPtr</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>76</ID>
+      <Description>"Frog Pointer"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>frogPtr</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>112</ID>
+      <Description>"Test Swim Aim Direct"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : GreatQuest.exe
+  Version: 
+  Date   : 2026-01-12
+  Author : fox_e
+
+  This script does blah blah blah
+}
+
+define(address,"GreatQuest.exe"+6D941)
+define(bytes,81 7F 08 48 66 4D 00)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000)
+
+label(code)
+label(return)
+
+newmem:
+cmp [edi+08],GreatQuest.exe.data+EF90
+je GreatQuest.exe.text+6C94A
+
+code:
+  cmp [edi+08],GreatQuest.exe.data+F648
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // cmp [edi+08],GreatQuest.exe.data+F648
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: GreatQuest.exe.text+6C941
+
+GreatQuest.exe.text+6C914: 8B 54 24 20              - mov edx,[esp+20]
+GreatQuest.exe.text+6C918: 8D 44 24 40              - lea eax,[esp+40]
+GreatQuest.exe.text+6C91C: 89 4C 24 48              - mov [esp+48],ecx
+GreatQuest.exe.text+6C920: 50                       - push eax
+GreatQuest.exe.text+6C921: 8D 8E 0C 03 00 00        - lea ecx,[esi+0000030C]
+GreatQuest.exe.text+6C927: 89 54 24 50              - mov [esp+50],edx
+GreatQuest.exe.text+6C92B: E8 F0 4C 01 00           - call GreatQuest.exe.text+81620
+GreatQuest.exe.text+6C930: 8B 7C 24 3C              - mov edi,[esp+3C]
+GreatQuest.exe.text+6C934: C6 84 24 04 01 00 00 02  - mov byte ptr [esp+00000104],02
+GreatQuest.exe.text+6C93C: E9 BF 01 00 00           - jmp GreatQuest.exe.text+6CB00
+// ---------- INJECTING HERE ----------
+GreatQuest.exe.text+6C941: 81 7F 08 48 66 4D 00     - cmp [edi+08],GreatQuest.exe.data+F648
+// ---------- DONE INJECTING  ----------
+GreatQuest.exe.text+6C948: 75 42                    - jne GreatQuest.exe.text+6C98C
+GreatQuest.exe.text+6C94A: E8 11 7C FA FF           - call GreatQuest.exe.text+14560
+GreatQuest.exe.text+6C94F: 8B C8                    - mov ecx,eax
+GreatQuest.exe.text+6C951: E8 6A 89 FA FF           - call GreatQuest.exe.text+152C0
+GreatQuest.exe.text+6C956: 8B E8                    - mov ebp,eax
+GreatQuest.exe.text+6C958: F6 85 04 01 00 00 07     - test byte ptr [ebp+00000104],07
+GreatQuest.exe.text+6C95F: 74 08                    - je GreatQuest.exe.text+6C969
+GreatQuest.exe.text+6C961: 8B 55 00                 - mov edx,[ebp+00]
+GreatQuest.exe.text+6C964: 8B CD                    - mov ecx,ebp
+GreatQuest.exe.text+6C966: FF 52 64                 - call dword ptr [edx+64]
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Don't Update Camera</Description>
+      <AddressString>GreatQuest.exe+46382</AddressString>
+      <Before>
+        <Byte>09</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>EB</Byte>
+        <Byte>C3</Byte>
+      </Before>
+      <Actual>
+        <Byte>8B</Byte>
+        <Byte>86</Byte>
+        <Byte>FC</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>F6</Byte>
+        <Byte>C4</Byte>
+        <Byte>01</Byte>
+        <Byte>0F</Byte>
+        <Byte>84</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>BuildLcsToWcs SetPos</Description>
+      <AddressString>GreatQuest.exe+4726A</AddressString>
+      <Before>
+        <Byte>30</Byte>
+        <Byte>51</Byte>
+        <Byte>50</Byte>
+        <Byte>8B</Byte>
+        <Byte>CE</Byte>
+      </Before>
+      <Actual>
+        <Byte>FF</Byte>
+        <Byte>52</Byte>
+        <Byte>74</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>86</Byte>
+        <Byte>04</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>BuildLcsToWcs kcMatrixLookAt</Description>
+      <AddressString>GreatQuest.exe+4721B</AddressString>
+      <Before>
+        <Byte>A4</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>03</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>E0</Byte>
+        <Byte>6D</Byte>
+        <Byte>05</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>83</Byte>
+        <Byte>C4</Byte>
+        <Byte>10</Byte>
+        <Byte>8D</Byte>
+        <Byte>4C</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Goober Y Rot</Description>
+      <AddressString>GreatQuest.exe+6D9E3</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>D9</Byte>
+        <Byte>44</Byte>
+        <Byte>24</Byte>
+        <Byte>24</Byte>
+      </Before>
+      <Actual>
+        <Byte>8B</Byte>
+        <Byte>96</Byte>
+        <Byte>88</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>44</Byte>
+        <Byte>24</Byte>
+        <Byte>38</Byte>
+        <Byte>D9</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [eax+00000090],00000000</Description>
+      <AddressString>MouseMod.dll+190D</AddressString>
+      <Before>
+        <Byte>A1</Byte>
+        <Byte>9C</Byte>
+        <Byte>44</Byte>
+        <Byte>B4</Byte>
+        <Byte>5F</Byte>
+      </Before>
+      <Actual>
+        <Byte>C7</Byte>
+        <Byte>80</Byte>
+        <Byte>90</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>A1</Byte>
+        <Byte>9C</Byte>
+        <Byte>44</Byte>
+        <Byte>B4</Byte>
+        <Byte>5F</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of movss [eax+0000008C],xmm0</Description>
+      <AddressString>MouseMod.dll+18EB</AddressString>
+      <Before>
+        <Byte>05</Byte>
+        <Byte>90</Byte>
+        <Byte>44</Byte>
+        <Byte>B4</Byte>
+        <Byte>5F</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>80</Byte>
+        <Byte>8C</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>A1</Byte>
+        <Byte>9C</Byte>
+        <Byte>44</Byte>
+        <Byte>B4</Byte>
+        <Byte>5F</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

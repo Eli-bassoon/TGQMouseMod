@@ -362,3 +362,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore the copied DLL near the cheat table
+TGQMouseMod_CE/TGQMouseMod.dll
