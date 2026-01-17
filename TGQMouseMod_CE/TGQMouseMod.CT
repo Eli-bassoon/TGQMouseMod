@@ -14,9 +14,9 @@
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-13
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Store the mouse position and check for clicks.
 }
 
 define(address,"GreatQuest.exe"+A03D)
@@ -26,7 +26,7 @@ define(bytes,33 F6 FF D7 F6 C4 80)
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -91,7 +91,7 @@ GreatQuest.exe.text+9056: FF D7           - call edi
           <ID>74</ID>
           <Description>"Look At Frogger"</Description>
           <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>loadlibrary(MouseMod.dll)
+          <AssemblerScript>loadlibrary(TGQMouseMod.dll)
 
 [ENABLE]
 "GreatQuest.exe.text"+461B7:
@@ -118,9 +118,9 @@ mov eax,[esi+000002b8]
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-12
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Control the third-person camera with the mouse.
 }
 
 define(address,"GreatQuest.exe"+46382)
@@ -130,7 +130,7 @@ define(bytes,8B 86 FC 02 00 00)
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -191,9 +191,9 @@ GreatQuest.exe.text+453AB: 8B 4A 08           - mov ecx,[edx+08]
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-11
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Store the pointer to Frogger so we can use it later.
 }
 
 define(address,"GreatQuest.exe"+70113)
@@ -203,7 +203,7 @@ define(bytes,57 8B 9E C8 00 00 00)
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -266,9 +266,9 @@ GreatQuest.exe.text+6F140: E8 1B 54 FA FF                 - call GreatQuest.exe.
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-12
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Instantly transition to freelook
 }
 
 define(address,"GreatQuest.exe"+46D4D)
@@ -278,7 +278,7 @@ define(bytes,D9 05 64 77 4B 00)
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -346,9 +346,9 @@ GreatQuest.exe.text+45D78: 68 00 00 80 3F     - push 3F800000
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-12
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Control the freelook camera with the mouse
 }
 
 define(address,"GreatQuest.exe"+46ED9)
@@ -358,7 +358,7 @@ define(bytes,8B 6C 24 10 55 68 00 00 80 3F 68 C0 35 42 00 E8 93 B0 FF FF 55 68 0
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -419,9 +419,10 @@ GreatQuest.exe.text+45EFF: 55                 - push ebp
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-12
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Fire goobers where the camera is pointed, instead of where
+  Frogger is looking.
 }
 
 define(address,"GreatQuest.exe"+6D9E3)
@@ -431,7 +432,7 @@ define(bytes,8B 96 88 00 00 00)
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -495,9 +496,10 @@ GreatQuest.exe.text+6CA14: 8B 7C 24 2C           - mov edi,[esp+2C]
           <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-12
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Make Frogger turn away from the camera when shooting a goober.
+  Weird hack.
 }
 
 define(address,"GreatQuest.exe"+71336)
@@ -507,7 +509,7 @@ define(bytes,6A FF 68 70 B6 4A 00)
 
 assert(address,bytes)
 alloc(newmem,$1000)
-loadlibrary(MouseMod.dll)
+loadlibrary(TGQMouseMod.dll)
 
 label(code)
 label(return)
@@ -700,9 +702,11 @@ GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C
       <AssemblerScript>{ Game   : GreatQuest.exe
   Version: 
   Date   : 2026-01-12
-  Author : fox_e
+  Author : Eli Fox
 
-  This script does blah blah blah
+  Fire goobers exactly where the camera is pointing in yaw and
+  pitch while swimming. I don't like how this feels so it
+  is not included by default.
 }
 
 define(address,"GreatQuest.exe"+6D941)
