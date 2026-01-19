@@ -1,0 +1,185 @@
+{
+  "version": "1.0",
+  "project_name": "TGQMouseMod",
+  "project_folder": "./",
+  "currently_selected_build_index": 0,
+  "build_versions": [
+    {
+      "build_name": "DEFAULT",
+      "platform": "PS2",
+      "symbols_file": "DEFAULT.txt",
+      "injection_files": [
+        "SLUS_202.57.elf"
+      ],
+      "injection_file_offsets": {
+        "SLUS_202.57.elf": "FFF80"
+      },
+      "injection_file_types": {
+        "SLUS_202.57.elf": "disk"
+      },
+      "extracted_game_folder": "C:/Files/Programming/C++/FroggerTGQ",
+      "main_executable": "SLUS_202.57.elf",
+      "source_path": null,
+      "compiler_flags": "-O3 -fsingle-precision-constant",
+      "is_single_file_mode": true,
+      "single_file_path": "C:/Files/Programming/C++/FroggerTGQ/SLUS_202.57.elf",
+      "section_maps": {
+        "SLUS_202.57.elf": [
+          {
+            "section_type": "unknown",
+            "file_offset": 128,
+            "mem_start": 1048576,
+            "mem_end": 2195328,
+            "size": 1146752
+          },
+          {
+            "section_type": "unknown",
+            "file_offset": 4705520,
+            "mem_start": 0,
+            "mem_end": 21164,
+            "size": 21164
+          },
+          {
+            "section_type": "unknown",
+            "file_offset": 1443184,
+            "mem_start": 0,
+            "mem_end": 2845953,
+            "size": 2845953
+          },
+          {
+            "section_type": "unknown",
+            "file_offset": 4289152,
+            "mem_start": 0,
+            "mem_end": 416354,
+            "size": 416354
+          },
+          {
+            "section_type": "unknown",
+            "file_offset": 5052104,
+            "mem_start": 0,
+            "mem_end": 43,
+            "size": 43
+          },
+          {
+            "section_type": "unknown",
+            "file_offset": 5052148,
+            "mem_start": 0,
+            "mem_end": 24,
+            "size": 24
+          }
+        ]
+      },
+      "code_caves": [
+        {
+          "name": "KernelRAM",
+          "code_files": [
+            "./src/main.cpp",
+            "./asm/syscalls.s",
+            "./asm/functions/aimGoobersOrbitAsm.s",
+            "./asm/functions/applyQueuedSpinAsm.s",
+            "./asm/functions/freelookCameraAsm.s",
+            "./asm/functions/getFrogPointerAsm.s",
+            "./asm/functions/lookAtFroggerAsm.s",
+            "./asm/functions/orbitCameraAsm.s",
+            "./asm/functions/transitionFreelookAsm.s"
+          ],
+          "memory_address": "00080000",
+          "size": "80000",
+          "injection_file": "",
+          "injection_file_address": "",
+          "auto_calculate_injection_file_address": false,
+          "injection_type": "memory_only",
+          "enabled": true
+        }
+      ],
+      "hooks": [
+        {
+          "name": "OrbitCamera",
+          "code_files": [
+            "./asm/injectors/inject_orbitCamera.s"
+          ],
+          "memory_address": "00175cfc",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x75D7C",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        },
+        {
+          "name": "LookAtFrogger",
+          "code_files": [
+            "./asm/injectors/inject_lookAtFrogger.s"
+          ],
+          "memory_address": "001754a0",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x75520",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        },
+        {
+          "name": "GetFrogPointer",
+          "code_files": [
+            "./asm/injectors/inject_getFrogPointer.s"
+          ],
+          "memory_address": "001625c0",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x62640",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        },
+        {
+          "name": "TransitionFreelook",
+          "code_files": [
+            "./asm/injectors/inject_transitionFreelook.s"
+          ],
+          "memory_address": "001756f4",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x75774",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        },
+        {
+          "name": "FreelookCamera",
+          "code_files": [
+            "./asm/injectors/inject_freelookCamera.s"
+          ],
+          "memory_address": "00175874",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x758F4",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        },
+        {
+          "name": "AimGoobersOrbit",
+          "code_files": [
+            "./asm/injectors/inject_aimGoobersOrbit.s"
+          ],
+          "memory_address": "00166ac8",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x66B48",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        },
+        {
+          "name": "ApplyQueuedSpin",
+          "code_files": [
+            "./asm/injectors/inject_testApplyQueuedSpin.s"
+          ],
+          "memory_address": "00161078",
+          "size": "0",
+          "injection_file": "SLUS_202.57.elf",
+          "injection_file_address": "0x610F8",
+          "auto_calculate_injection_file_address": true,
+          "enabled": true
+        }
+      ],
+      "binary_patches": [],
+      "multi_patches": []
+    }
+  ]
+}

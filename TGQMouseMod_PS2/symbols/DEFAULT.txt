@@ -1,0 +1,15 @@
+/* Symbols file for build version: DEFAULT */
+/* This is where you put your in-game global variables & functions */
+
+/* Gamepad: 0x3DA3D8 */
+analogueStickRX = 0x3da3ec; /* Left is 0, right is 255 */
+analogueStickRY = 0x3da3f0; /* Up is 0, down is 255 */
+analogueStickLYNorm = 0x3da3f8;
+
+gameSystem = 0x2181A8;
+
+/* Functions */
+sinf = 0x00195750;
+cosf = 0x001953d8;
+printf = 0x0019a160;
+raycast = 0x00133b10;
