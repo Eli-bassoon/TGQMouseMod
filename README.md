@@ -53,6 +53,20 @@ You can inject the DLL using any method you like, including Cheat Engine. I have
 
 This mod works best in fullscreen mode. If you run the game in windowed mode, note that by default **this mod will freeze your mouse cursor to one position.** This is normal, and you can regain control of your mouse by alt-tabbing or just clicking away. If you don't like your mouse being hijacked, you can run the mod with Cheat Engine and set the "Capture Mouse Cursor" value to 0.
 
-I use DGVoodoo2 to make the game run on modern Windows and run the game in windowed mode for testing, along with RivaTuner to limit the FPS to 60. I have not gotten DXWind to work, so this mod is untested using that method.
+I use dgVoodoo2 to make the game run on modern Windows and run the game in windowed mode for testing, along with RivaTuner to limit the FPS to 60. I have not gotten DxWnd to work, so this mod is untested using that method.
+
+By default the game uses arrow keys for movement. I recommend rebinding to WASD. Here are my keybinds:
+
+| Keys                   | Actions         |
+| ---------------------- | --------------- |
+| WASD                   | Movement        |
+| Spacebar               | Jump            |
+| Left Click / Left Ctrl | Attack          |
+| F                      | Free look       |
+| E                      | Interact / Dive |
+| R                      | Magic Stone     |
+| Q                      | Scroll Stones   |
+| Shift                  | Target / Strafe |
+| Tab                    | Inventory       |
 
 Many thanks to Kneesnap for discovering that the PS2 version of *The Great Quest* shipped with debug symbols, allowing a fairly good reconstruction of the source code.
