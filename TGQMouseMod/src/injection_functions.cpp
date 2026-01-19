@@ -1,6 +1,8 @@
 #include "mod_functions.h"
 #include "hooking.h"
 
+// When modifying one of these hooks, also remember to modify the corresponding hook in the cheat table
+
 // Get the mouse input and clicks
 DEFINE_INJECT_WRAPPER(
 	InjectHookMouseInput,
@@ -11,7 +13,7 @@ DEFINE_INJECT_WRAPPER(
 __asm call storeMousePos
 
 __asm call storeMouseClick
-__asm mov ebx, eax
+__asm mov ebx, eax // The hooked function expects the result in ebx
 
 // Original code
 __asm xor esi, esi
@@ -28,11 +30,16 @@ DEFINE_INJECT_WRAPPER(
 	26,
 	ASM(
 
-__asm mov eax, [esi + 0x268]
-__asm mov[esp + 0x1C], eax
+// The camera PID tries to look at frogger, but the PID smoothing normally causes a lag
+// esi is cameraPtr, and we offset to Frogger's actual position
+// Here we move the actual x and z position of frogger, along with our own PID smoothed y position
+// to the local variables on the stack corresponding to the focus point
+// Later, the hooked function computes a rotation matrix to aim the camera directly at this focus point
+__asm mov eax, [esi + CAMERA_FROG_POS_OFFSET]
+__asm mov [esp + 0x1C], eax
 __asm mov eax, [cameraFocusY]
-__asm mov[esp + 0x20], eax
-__asm mov eax, [esi + 0x270]
+__asm mov [esp + 0x20], eax
+__asm mov eax, [esi + CAMERA_FROG_POS_OFFSET + 0x8]
 
 	)
 )
@@ -46,7 +53,8 @@ DEFINE_INJECT_WRAPPER(
 	6,
 	ASM(
 
-__asm push [esi + 0x2f8]
+// esi is cameraPtr
+__asm push [esi + CAMERA_DELTA_TIME_OFFSET] // cameraPtr->deltaTime
 __asm push esi
 __asm call orbitCamera
 __asm jmp [InjectOrbitCameraActualJump]
@@ -65,7 +73,7 @@ __asm mov [frogPtr],esi
 
 // Original code
 __asm push edi
-__asm mov ebx,[esi+0xC8]
+__asm mov ebx, [esi + 0xC8]
 
 	)
 )
@@ -78,14 +86,20 @@ DEFINE_INJECT_WRAPPER(
 	6,
 	ASM(
 
-__asm mov eax, [esi + 0x17c]
-__asm mov[esi + 0x178], eax
+// esi is cameraPtr
+// 0x178 is the offset to the start of the position PID structs
+// The structs are aligned so +0 is the current position and +4 is the goal position
+// Each struct's size is 0x20 bytes
+// So these lines move the goal position directly to the current position
+// This bypasses the PID and sets the current position directly to the goal position
+__asm mov eax, [esi + CAMERA_PID_OFFSET + 0x4]
+__asm mov [esi + CAMERA_PID_OFFSET], eax
 
-__asm mov eax, [esi + 0x19c]
-__asm mov [esi + 0x198], eax
+__asm mov eax, [esi + CAMERA_PID_OFFSET + 0x20 + 0x4]
+__asm mov [esi + CAMERA_PID_OFFSET + 0x20], eax
 
-__asm mov eax, [esi + 0x1bc]
-__asm mov [esi + 0x1b8], eax
+__asm mov eax, [esi + CAMERA_PID_OFFSET + 0x40 + 0x4]
+__asm mov [esi + CAMERA_PID_OFFSET + 0x40], eax
 
 // Original code
 //__asm fld dword ptr [InjectFreelookTransitionFld]
@@ -102,7 +116,8 @@ DEFINE_INJECT_WRAPPER(
 	60,
 	ASM(
 
-__asm push[esi + 0x2f8]
+// esi is cameraPtr
+__asm push[esi + CAMERA_DELTA_TIME_OFFSET] // cameraPtr->deltaTime
 __asm call freelookCamera
 
 	)
@@ -131,7 +146,7 @@ DEFINE_INJECT_WRAPPER(
 	7,
 	ASM(
 
-__asm call testApplyQueuedSpin
+__asm call applyQueuedSpin
 
 // Original code
 __asm push -1

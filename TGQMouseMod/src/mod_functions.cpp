@@ -13,14 +13,14 @@ __declspec(dllexport) int mouseY = 0;
 __declspec(dllexport) int mouseDx = 0;
 __declspec(dllexport) int mouseDy = 0;
 
+__declspec(dllexport) bool captureCursor = true;
+
 // Pointers to game memory
 __declspec(dllexport) char* cameraPtr;
 __declspec(dllexport) char* frogPtr;
 float* analogueYInputPtr = reinterpret_cast<float*>(0x004DC470);
 int* pressedKeysPtr = reinterpret_cast<int*>(0x004DC44C);
 __declspec(dllexport) char** gameSystemPtrLoc = reinterpret_cast<char**>(0x004e4528); // Static address in the exe
-
-__declspec(dllexport) bool captureCursor = true;
 
 // Free look
 __declspec(dllexport) float freelookScaleX = 1200.0f;
@@ -60,7 +60,7 @@ __declspec(dllexport) float cameraYPidD = 0.0f;
 
 // Raycasting
 typedef int(__thiscall* raycastFnSig)(char* gameSystem, kcVector4* pPoint, kcVector4* pDirection, float* pDist, int unused, unsigned int mask, unsigned int ignore, _kcSurfaceInfo* pReturnInfo);
-__declspec(dllexport) raycastFnSig raycastFnPtr = reinterpret_cast<raycastFnSig>(0x00416750); // Location in the exe
+__declspec(dllexport) raycastFnSig raycast = reinterpret_cast<raycastFnSig>(0x00416750); // Location in the exe
 
 __declspec(dllexport) int castSteps = 10;
 
@@ -120,14 +120,14 @@ int __stdcall storeMouseClick() {
 
 // Raycast utility
 bool castRay(float dist, float pitch, float yaw) {
-    kcVector4 origin = *reinterpret_cast<kcVector4*>(cameraPtr + 0x268);
+    kcVector4 origin = *reinterpret_cast<kcVector4*>(cameraPtr + CAMERA_FROG_POS_OFFSET);
     kcVector4 normal = {
         sinf(pitch) * cosf(yaw),
         cosf(pitch),
         sinf(pitch) * sinf(yaw)
     };
 
-    int hit = raycastFnPtr(
+    int hit = raycast(
         *gameSystemPtrLoc,
         &origin,
         &normal,
@@ -193,8 +193,6 @@ void __stdcall orbitCamera(char* camera, float deltaTime) {
     cameraYaw += clamp(static_cast<float>(mouseDx) * deltaTime / orbitScaleX, -orbitMaxSpeedX, orbitMaxSpeedX);
     cameraPitch += clamp(static_cast<float>(mouseDy) * deltaTime / orbitScaleY, -orbitMaxSpeedY, orbitMaxSpeedY);
 
-    //cameraYaw = wrapToPi(cameraYaw);
-    //cameraPitch = clamp(cameraPitch, orbitPitchClampOffset, PI - orbitPitchClampOffset);
     cameraYaw = wrapToPi(prevYaw * 0.2f + cameraYaw * 0.8f);
     cameraPitch = clamp(prevPitch * 0.2f + cameraPitch * 0.8f, orbitPitchClampOffset, PI - orbitPitchClampOffset);
 
@@ -202,9 +200,10 @@ void __stdcall orbitCamera(char* camera, float deltaTime) {
     frogNewPitch = clamp(-cameraPitch + PI / 2, -1.55f, 1.55f);
 
     // Get Frogger's position
-    float frogX = *reinterpret_cast<float*>(cameraPtr + 0x268);
-    float frogY = *reinterpret_cast<float*>(cameraPtr + 0x268 + 0x4);
-    float frogZ = *reinterpret_cast<float*>(cameraPtr + 0x268 + 0x8);
+    auto frogPos = reinterpret_cast<kcVector4*>(cameraPtr + CAMERA_FROG_POS_OFFSET);
+    float frogX = frogPos->x;
+    float frogY = frogPos->y;
+    float frogZ = frogPos->z;
 
     // Do PID control on the Y coordinate
     float cameraYError = frogY - cameraFocusY;
@@ -227,9 +226,11 @@ void __stdcall orbitCamera(char* camera, float deltaTime) {
     float dy = orbitDist * cosf(cameraPitch);
     float dz = orbitDist * sinf(cameraPitch) * sinf(cameraYaw);
 
-    *reinterpret_cast<float*>(cameraPtr + 0x178) = frogX + dx;
-    *reinterpret_cast<float*>(cameraPtr + 0x198) = cameraFocusY + dy;
-    *reinterpret_cast<float*>(cameraPtr + 0x1B8) = frogZ + dz;
+    // The camera struct aligns the x y z PID structs next to each other
+    auto cameraPidPtr = reinterpret_cast<cameraPid*>(cameraPtr + CAMERA_PID_OFFSET);
+    cameraPidPtr->x.x = frogX + dx;
+    cameraPidPtr->y.x = cameraFocusY + dy;
+    cameraPidPtr->z.x = frogZ + dz;
 
     // Finally, bump the camera if we would clip out of the world
     bumpCamera();
@@ -247,25 +248,35 @@ void __stdcall freelookCamera(float deltaTime) {
     cameraYaw = wrapToPi(prevYaw * 0.1f + cameraYaw * 0.9f);
     cameraPitch = clamp(prevPitch * 0.1f + cameraPitch * 0.9f, orbitPitchClampOffset, PI - orbitPitchClampOffset);
 
-    // Convert to freelook coordinates
+    // Convert to freelook coordinates and set the camera's pitch and yaw
     frogNewYaw = wrapToPi(-cameraYaw - PI / 2);
     frogNewPitch = clamp(-cameraPitch + PI / 2, -1.55f, 1.55f);
-    *reinterpret_cast<float*>(cameraPtr + 0x1f8) = frogNewYaw;
-    *reinterpret_cast<float*>(cameraPtr + 0x1d8) = frogNewPitch;
 
-    *reinterpret_cast<float*>(frogPtr + 0x88) = frogNewYaw; // Set frog rot y pid.x
-    *reinterpret_cast<float*>(frogPtr + 0x8c) = frogNewYaw; // Set frog rot y pid.eq
-    *reinterpret_cast<float*>(frogPtr + 0x90) = 0; // Set frog rot y pid.v
-    *reinterpret_cast<float*>(frogPtr + 0x94) = 0; // Set frog rot y pid.i
+    auto cameraPidPtr = reinterpret_cast<cameraPid*>(cameraPtr + CAMERA_PID_OFFSET);
+    cameraPidPtr->pitch.x = frogNewPitch;
+    cameraPidPtr->yaw.x = frogNewYaw;
+
+    // Set the PID parameters for Frogger's yaw rotation, so he moves with the camera
+    auto frogYawPid = reinterpret_cast<_kcPid*>(frogPtr + FROG_TURN_PID_OFFSET);
+    frogYawPid->x = frogNewYaw;
+    frogYawPid->eq = frogNewYaw;
+    frogYawPid->v = 0;
+    frogYawPid->i = 0;
 }
 
 // Due to the camera being weird and always resetting the rotation, we have to simulate moving forward for one frame to make it stick
-void __stdcall testApplyQueuedSpin() {
+void __stdcall applyQueuedSpin() {
     if (queuedSpin) {
-        *reinterpret_cast<float*>(frogPtr + 0x88) = frogNewYaw; // Set frog rot y pid.x
-        *reinterpret_cast<float*>(frogPtr + 0x8c) = frogNewYaw; // Set frog rot y pid.eq
-        *reinterpret_cast<float*>(frogPtr + 0x94) = 0; // Set frog rot y pid.i
-        *analogueYInputPtr = 1.0f; // Set the analogue input to forward, forcing Frogger to move forward a slight amount and rotate towards the camera
+        // Set the PID parameters for Frogger's yaw rotation, so he turns away from the camera
+        auto frogYawPid = reinterpret_cast<_kcPid*>(frogPtr + FROG_TURN_PID_OFFSET);
+        frogYawPid->x = frogNewYaw;
+        frogYawPid->eq = frogNewYaw;
+        frogYawPid->v = 0;
+        frogYawPid->i = 0;
+
+        // Set the analogue input to forward, forcing Frogger to move forward a slight amount and rotate towards the camera
+        *analogueYInputPtr = 1.0f;
+
         --queuedSpin;
     }
 }
