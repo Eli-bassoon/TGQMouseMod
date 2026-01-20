@@ -1,8 +1,12 @@
 # TGQMouseMod
 
-A mod for the PC port of *Frogger: The Great Quest* that adds mouse controls to the camera.
+A mod for the PS2 and PC ports of *Frogger: The Great Quest* that adds mouse controls to the camera.
 
 **NOTICE:** This project is in very early pre-alpha state and no stability is guaranteed. Also, don't freak out when your mouse cursor gets locked to one spot. That is intended and can be disabled.
+
+## Download
+
+The latest version can be downloaded from the [releases page](https://github.com/Eli-bassoon/TGQMouseMod/releases) as TGQMouseMod.zip
 
 ## Motivation
 
@@ -22,40 +26,59 @@ The game is notorious for having an awful camera that constantly loses sight of 
 * In third-person mode, shoot goobers where you aim the camera instead of where Frogger is pointed.
 * In fullscreen, shoot goobers by left clicking.
 
-## Usage
+## PC Usage
 
-There are two methods to use this mod: 1) Cheat Engine, and 2) Standalone DLL injection
+It is assumed you already can run the PC port of Frogger: The Great Quest on Windows.
+
+There are two methods to use this mod on PC: 1) Cheat Engine, and 2) Standalone DLL injection
 
 ### 1) Cheat Engine
 
 1. Download [Cheat Engine](https://www.cheatengine.org)
 2. Launch The Great Quest and attach Cheat Engine to the process
-3. Load the provided cheat table in [TGQMouseMod_CE/TGQMouseMod.CT](./TGQMouseMod_CE/TGQMouseMod.CT). By default no tweaks are enabled.
+3. Load the provided cheat table from the release you downloaded, located at `TGQMouseMod/PC/TGQMouseMod_CE/TGQMouseMod.CT` after you unpack the zip file. By default no tweaks are enabled.
 4. Click the checkbox called "Tweaks - ENABLE ME" to enable all tweaks.
 
 All tweaks can be individually enabled or disabled for testing purposes. Below the tweaks menu are numerous debug options and configuration settings. If you want to change mouse sensitivity you can modify the "Scale" and "Speed" values. Higher scales yield lower mouse sensitivity, lower speed values limit the maximum rotation each frame.
 
 ### 2) Standalone DLL
 
-1. Put Injector.exe and TGQMouseMod.dll in the same folder as where you have The Great Quest installed.
-2. Run Injector.exe. **If your Antivirus flags it, it is a false positive.**
+1. Find the standalone DLL and injector exe in the release you downloaded, located inside `TGQMouseMod/PC/TGQMouseMod_Autoinject` after you unpack the zip file.
+2. Put Injector.exe and TGQMouseMod.dll in the same folder as where you have The Great Quest installed. Make sure you are using the right DLL, which is in the same folder as Injector.exe.
+3. Run Injector.exe. **If your Antivirus flags it, it is a false positive.**
 
 You can inject the DLL using any method you like, including Cheat Engine. I have provided an injector if you don't want to download anything else.
 
+## PS2 Usage
+
+There is some setup for the PS2 version, so see [PS2 Usage](./doc/usage_ps2.md).
+
 ## Building
+
+### PC
 
 1. Install Visual Studio 22, along with the following packages
    * Desktop Development with C/C++
    * Windows 11 SDK
 2. Build the project using Visual Studio
 
+### PS2
+
+1. Extract the .elf file containing the executable part of the game's code from the game disk
+2. Download and unpack [C/C++ Game Modding Utility](https://github.com/C0mposer/C-Game-Modding-Utility) by C0mposer
+3. Load the project at `TGQMouseMod_PS2/TGQMouseMod.modproj` and select the .elf file as the file to mod
+4. Compile the project
+5. After compiling, the mod can be directly injected into PCSX2 or exported as a .pnach and loaded as a game patch
+
 ## Notes
+
+### PC
 
 This mod works best in fullscreen mode. If you run the game in windowed mode, note that by default **this mod will freeze your mouse cursor to one position.** This is normal, and you can regain control of your mouse by alt-tabbing or just clicking away. If you don't like your mouse being hijacked, you can run the mod with Cheat Engine and set the "Capture Mouse Cursor" value to 0.
 
 I use dgVoodoo2 to make the game run on modern Windows and run the game in windowed mode for testing, along with RivaTuner to limit the FPS to 60. I have not gotten DxWnd to work, so this mod is untested using that method.
 
-By default the game uses arrow keys for movement. I recommend rebinding to WASD. Here are my keybinds:
+By default the game uses arrow keys for movement. I recommend rebinding to WASD. Here are my keybinds for PC:
 
 | Keys                   | Actions         |
 | ---------------------- | --------------- |
@@ -66,7 +89,11 @@ By default the game uses arrow keys for movement. I recommend rebinding to WASD.
 | E                      | Interact / Dive |
 | R                      | Magic Stone     |
 | Q                      | Scroll Stones   |
-| Shift                  | Target / Strafe |
+| Left Shift             | Target / Strafe |
 | Tab                    | Inventory       |
 
-Many thanks to Kneesnap for discovering that the PS2 version of *The Great Quest* shipped with debug symbols, allowing a fairly good reconstruction of the source code.
+### PS2
+
+I do not own a game controller, so the mod is untested on controller.
+
+Many thanks to Kneesnap for discovering that the PS2 version of *The Great Quest* shipped with debug symbols, allowing for a fairly good reconstruction of the source code.
