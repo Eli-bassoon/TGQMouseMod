@@ -1,25 +1,31 @@
 #include <types.h>
 #include <symbols.h>
-#include "kcC.h"
-
-#define PI 3.14159265358979323846f
+#include <kcC.h>
+#include <utils.h>
+#include <damping.hpp>
 
 #define CAMERA_FROG_POS_OFFSET 0x290 // Offset from cameraPtr to the frog position
 #define CAMERA_PID_OFFSET 0x1a0 // Offset from cameraPtr to the PIDs for position and rotation
+#define CAMERA_DELTA_TIME_OFFSET 0x324 // Offset from cameraPtr to deltaTime
 #define FROG_TURN_PID_OFFSET 0x88 // Offset from frogPtr to the yaw PID
 
-// Free look
-float freelookScaleX = 50.0f;
-float freelookScaleY = -60.0f;
+char* cameraPtr;
+char* frogPtr;
 
-float freelookMaxSpeedX = 0.2f;
-float freelookMaxSpeedY = 0.2f;
+// Free look
+float sensitivity = 1.0f;
+
+float freelookScaleX = 0.0090f;
+float freelookScaleY = -0.0077f;
+
+float freelookMaxSpeedX = 0.25f;
+float freelookMaxSpeedY = 0.25f;
 
 // Orbit
-float orbitScaleX = 50.0f;
-float orbitScaleY = -55.0f;
+float orbitScaleX = 0.012f;
+float orbitScaleY = -0.010f;
 
-float orbitMaxSpeedX = 0.3f;
+float orbitMaxSpeedX = 0.5f;
 float orbitMaxSpeedY = 0.2f;
 
 float orbitYOffset = 0.2f;
@@ -27,53 +33,30 @@ float orbitYOffset = 0.2f;
 float orbitPitchClampOffset = 0.1f;
 
 float minOrbitDist = 0.2f;
-float maxOrbitDist = 4.0f; // Was originally 4
+float maxOrbitDist = 4.0f;
 float orbitDist = maxOrbitDist;
 
 float orbitBumpDist = 0.15f;
 float orbitHalfFovW = 0.15f;
 float orbitHalfFovH = 0.07f;
 
-float cameraYaw = 0.0f;
+Damper cameraYawDamper;
+Damper cameraPitchDamper;
+float cameraYaw = 0.0f; // These are separate variables so we can link to them in assembly more easily
 float cameraPitch = 0.5f;
 
 float frogNewYaw = 0.0f;
 float frogNewPitch = 0.0f;
 int queuedSpin = 0;
 
+Damper cameraFocusYDamper;
 float cameraFocusY = 0.0f;
-float cameraYPrevError = 0.0f;
-float cameraYPidP = 0.1f;
-float cameraYPidD = 0.0f;
 
 // Raycasting
 int castSteps = 10;
 
 // The expected values of surface info from debugging the original raycast code
 _kcSurfaceInfo surfaceInfo = { 0, 0x1F94A278, 0, 0 };
-
-float fmin(float x, float y) {
-    return (x < y) ? x : y;
-}
-
-float fmax(float x, float y) {
-    return (x > y) ? x : y;
-}
-
-// Helper functions
-float clamp(float x, float min, float max) {
-    return fmin(fmax(x, min), max);
-}
-
-float wrapToPi(float x) {
-    if (x > PI) {
-        x -= 2 * PI;
-    }
-    else if (x < -PI) {
-        x += 2 * PI;
-    }
-    return x;
-}
 
 // Raycast utility
 bool castRay(float dist, float pitch, float yaw) {
@@ -135,25 +118,30 @@ void bumpCamera() {
     orbitDist = mid;
 }
 
-float prevYaw = 0;
-float prevPitch = 0;
-
 // Orbiting camera control with mouse
-extern "C" void orbitCamera(char* camera, float deltaTime) {
+extern "C" void orbitCamera(char* camera) {
+    // Initialize state only one time
+    ONCE {
+        cameraFocusYDamper = Damper_new(0, 0.15f, 2.0f);
+        cameraYawDamper = Damper_new(0, 0.9f, 0.2f);
+        cameraPitchDamper = Damper_new(0.5f, 0.85f, 0.2f);
+    }
+    
     cameraPtr = camera;
-
-    prevYaw = cameraYaw;
-    prevPitch = cameraPitch;
+    float deltaTime = *reinterpret_cast<float*>(cameraPtr + CAMERA_DELTA_TIME_OFFSET);
 
     // Add mouse coordinates and clamp
-    cameraYaw += clamp(static_cast<float>(analogueStickRX - 127) / orbitScaleX, -orbitMaxSpeedX, orbitMaxSpeedX);
-    cameraPitch += clamp(static_cast<float>(analogueStickRY - 127) / orbitScaleY, -orbitMaxSpeedY, orbitMaxSpeedY);
+    cameraYaw += clamp(static_cast<float>(analogueStickRX - 127) * sensitivity * orbitScaleX * deltaTime, -orbitMaxSpeedX, orbitMaxSpeedX);
+    cameraPitch += clamp(static_cast<float>(analogueStickRY - 127) * sensitivity * orbitScaleY * deltaTime, -orbitMaxSpeedY, orbitMaxSpeedY);
 
-    cameraYaw = wrapToPi(prevYaw * 0.2f + cameraYaw * 0.8f);
-    cameraPitch = clamp(prevPitch * 0.2f + cameraPitch * 0.8f, orbitPitchClampOffset, PI - orbitPitchClampOffset);
+    cameraYaw = wrapToPi(cameraYaw);
+    cameraPitch = clamp(cameraPitch, orbitPitchClampOffset, PI - orbitPitchClampOffset);
 
-    frogNewYaw = wrapToPi(-cameraYaw - PI / 2);
-    frogNewPitch = clamp(-cameraPitch + PI / 2, -1.55f, 1.55f);
+    Damper_step_wrapToPi(cameraYawDamper, cameraYaw);
+    Damper_step_wrapToPi(cameraPitchDamper, cameraPitch);
+
+    frogNewYaw = wrapToPi(-cameraYawDamper.val - PI / 2);
+    frogNewPitch = clamp(-cameraPitchDamper.val + PI / 2, -1.55f, 1.55f);
 
     // Get Frogger's position
     auto frogPos = reinterpret_cast<kcVector4*>(cameraPtr + CAMERA_FROG_POS_OFFSET);
@@ -161,28 +149,22 @@ extern "C" void orbitCamera(char* camera, float deltaTime) {
     float frogY = frogPos->y;
     float frogZ = frogPos->z;
 
-    // Do PID control on the Y coordinate, aiming to be an offset above Frogger
-    float cameraYError = (frogY + orbitYOffset) - cameraFocusY;
-    // Teleport for large errors
-    if (cameraYError > 5.0f) {
-        cameraYError = 0;
-        cameraYPrevError = 0;
-        cameraFocusY = frogY + orbitYOffset;
-    }
-    // Do PD for small errors
-    else {
-        float dError = cameraYError - cameraYPrevError;
-        float extra = cameraYError * cameraYPidP - dError * cameraYPidD;
-        cameraFocusY += extra;
-        cameraYPrevError = cameraYError;
+    // Do damping on the Y coordinate, aiming to be an offset above Frogger
+    float goalY = frogY + orbitYOffset;
+    cameraFocusY = Damper_step(cameraFocusYDamper, goalY);
+
+    // We are already clamping to a range, but if we go even further than that range, directly set the focus position
+    // This helps avoid jarring transitions when switching levels
+    if (fabs(cameraFocusY - goalY) > 5.0f) {
+        Damper_resetAt(cameraFocusYDamper, goalY);
     }
 
     // Offset in spherical coordinates
-    float dx = orbitDist * sinf(cameraPitch) * cosf(cameraYaw);
-    float dy = orbitDist * cosf(cameraPitch);
-    float dz = orbitDist * sinf(cameraPitch) * sinf(cameraYaw);
+    float dx = orbitDist * sinf(cameraPitchDamper.val) * cosf(cameraYawDamper.val);
+    float dy = orbitDist * cosf(cameraPitchDamper.val);
+    float dz = orbitDist * sinf(cameraPitchDamper.val) * sinf(cameraYawDamper.val);
 
-    // The camera struct aligns the x y z PID structs next to each other
+    // The camera's position is stored in a set of PID structs for x y z pitch yaw roll
     auto cameraPidPtr = reinterpret_cast<cameraPid*>(cameraPtr + CAMERA_PID_OFFSET);
     cameraPidPtr->x.x = frogX + dx;
     cameraPidPtr->y.x = cameraFocusY + dy;
@@ -194,19 +176,22 @@ extern "C" void orbitCamera(char* camera, float deltaTime) {
 
 // First-person freelook control with mouse
 extern "C" void freelookCamera() {
-    prevYaw = cameraYaw;
-    prevPitch = cameraPitch;
+    float deltaTime = *reinterpret_cast<float*>(cameraPtr + CAMERA_DELTA_TIME_OFFSET);
 
     // Add mouse coordinates and clamp
-    cameraYaw += clamp(static_cast<float>(analogueStickRX - 127) / freelookScaleX, -freelookMaxSpeedX, freelookMaxSpeedX);
-    cameraPitch += clamp(static_cast<float>(analogueStickRY - 127) / freelookScaleY, -freelookMaxSpeedY, freelookMaxSpeedY);
+    cameraYaw += clamp(static_cast<float>(analogueStickRX - 127) * sensitivity * freelookScaleX * deltaTime, -freelookMaxSpeedX, freelookMaxSpeedX);
+    cameraPitch += clamp(static_cast<float>(analogueStickRY - 127) * sensitivity * freelookScaleY * deltaTime, -freelookMaxSpeedY, freelookMaxSpeedY);
 
-    cameraYaw = wrapToPi(prevYaw * 0.1f + cameraYaw * 0.9f);
-    cameraPitch = clamp(prevPitch * 0.1f + cameraPitch * 0.9f, orbitPitchClampOffset, PI - orbitPitchClampOffset);
+    cameraYaw = wrapToPi(cameraYaw);
+    cameraPitch = clamp(cameraPitch, orbitPitchClampOffset, PI - orbitPitchClampOffset);
+
+    // Don't do any damping when in first person
+    Damper_resetAt(cameraYawDamper, cameraYaw);
+    Damper_resetAt(cameraPitchDamper, cameraPitch);
 
     // Convert to freelook coordinates
-    frogNewYaw = wrapToPi(-cameraYaw - PI / 2);
-    frogNewPitch = clamp(-cameraPitch + PI / 2, -1.55f, 1.55f);
+    frogNewYaw = wrapToPi(-cameraYawDamper.val - PI / 2);
+    frogNewPitch = clamp(-cameraPitchDamper.val + PI / 2, -1.55f, 1.55f);
 
     auto cameraPidPtr = reinterpret_cast<cameraPid*>(cameraPtr + CAMERA_PID_OFFSET);
     cameraPidPtr->pitch.x = frogNewPitch;

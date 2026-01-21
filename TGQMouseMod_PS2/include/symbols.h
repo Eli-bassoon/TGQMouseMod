@@ -8,8 +8,8 @@ extern int analogueStickRY;
 extern float analogueStickLYNorm;
 extern char* gameSystem;
 
-char* cameraPtr;
-char* frogPtr;
+extern char* cameraPtr;
+extern char* frogPtr;
 
 // External functions
 extern "C"

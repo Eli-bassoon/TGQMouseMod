@@ -81,7 +81,9 @@
             "./asm/functions/getFrogPointerAsm.s",
             "./asm/functions/lookAtFroggerAsm.s",
             "./asm/functions/orbitCameraAsm.s",
-            "./asm/functions/transitionFreelookAsm.s"
+            "./asm/functions/transitionFreelookAsm.s",
+            "./src/utils.cpp",
+            "./src/damping.cpp"
           ],
           "memory_address": "00080000",
           "size": "80000",
