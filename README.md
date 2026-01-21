@@ -2,6 +2,8 @@
 
 A mod for the PS2 and PC ports of *Frogger: The Great Quest* that adds mouse controls to the camera.
 
+[comparison.webm](https://github.com/user-attachments/assets/0dd81f7a-a417-425e-9395-67e709bdfc34)
+
 **NOTICE:** This project is in very early pre-alpha state and no stability is guaranteed. Also, don't freak out when your mouse cursor gets locked to one spot. That is intended and can be disabled.
 
 ## Download
