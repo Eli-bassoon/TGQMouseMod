@@ -22,10 +22,12 @@ float orbitScaleY = -55.0f;
 float orbitMaxSpeedX = 0.3f;
 float orbitMaxSpeedY = 0.2f;
 
+float orbitYOffset = 0.2f;
+
 float orbitPitchClampOffset = 0.1f;
 
 float minOrbitDist = 0.2f;
-float maxOrbitDist = 3.5f; // Was originally 4
+float maxOrbitDist = 4.0f; // Was originally 4
 float orbitDist = maxOrbitDist;
 
 float orbitBumpDist = 0.15f;
@@ -159,13 +161,13 @@ extern "C" void orbitCamera(char* camera, float deltaTime) {
     float frogY = frogPos->y;
     float frogZ = frogPos->z;
 
-    // Do PID control on the Y coordinate
-    float cameraYError = frogY - cameraFocusY;
+    // Do PID control on the Y coordinate, aiming to be an offset above Frogger
+    float cameraYError = (frogY + orbitYOffset) - cameraFocusY;
     // Teleport for large errors
     if (cameraYError > 5.0f) {
         cameraYError = 0;
         cameraYPrevError = 0;
-        cameraFocusY = frogY;
+        cameraFocusY = frogY + orbitYOffset;
     }
     // Do PD for small errors
     else {
