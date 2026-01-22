@@ -41,7 +41,7 @@ There are two methods to use this mod on PC: 1) Cheat Engine, and 2) Standalone 
 3. Load the provided cheat table from the release you downloaded, located at `TGQMouseMod/PC/CheatEngine/TGQMouseMod.CT` after you unpack the zip file. By default no tweaks are enabled.
 4. Click the checkbox called "Tweaks - ENABLE ME" to enable all tweaks.
 
-All tweaks can be individually enabled or disabled for testing purposes. Below the tweaks menu are numerous debug options and configuration settings. If you want to change mouse sensitivity you can modify the "Scale" and "Speed" values. Higher scales yield lower mouse sensitivity, lower speed values limit the maximum rotation each frame.
+All tweaks can be individually enabled or disabled for testing purposes. Below the tweaks menu are numerous debug options and configuration settings. If you want to change mouse sensitivity you can modify the "Mouse Sensitivity" value, which defaults to 1.
 
 ### 2) Standalone DLL
 

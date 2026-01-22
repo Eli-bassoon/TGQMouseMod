@@ -1,5 +1,6 @@
-#include "mod_functions.h"
+#include "symbols_pc.h"
 #include "hooking.h"
+#include "mouse_utils.h"
 
 // When modifying one of these hooks, also remember to modify the corresponding hook in the cheat table
 
@@ -54,7 +55,6 @@ DEFINE_INJECT_WRAPPER(
 	ASM(
 
 // esi is cameraPtr
-__asm push [esi + CAMERA_DELTA_TIME_OFFSET] // cameraPtr->deltaTime
 __asm push esi
 __asm call orbitCamera
 __asm jmp [InjectOrbitCameraActualJump]
@@ -116,8 +116,6 @@ DEFINE_INJECT_WRAPPER(
 	60,
 	ASM(
 
-// esi is cameraPtr
-__asm push[esi + CAMERA_DELTA_TIME_OFFSET] // cameraPtr->deltaTime
 __asm call freelookCamera
 
 	)

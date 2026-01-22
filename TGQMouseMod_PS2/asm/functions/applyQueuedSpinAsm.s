@@ -4,7 +4,7 @@
 applyQueuedSpinAsm:
     move $s3,$a0 /* Save a0 */
 
-    jal testApplyQueuedSpin
+    jal applyQueuedSpin
     nop
 
     move $a0,$s3 /* Restore a0 */

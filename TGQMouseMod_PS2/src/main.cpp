@@ -1,64 +1,92 @@
-#include <types.h>
-#include <symbols.h>
-#include <kcC.h>
-#include <utils.h>
-#include <damping.hpp>
+// PS2 specific includes
+#ifdef PS2
+#include "symbols.h"
 
-#define CAMERA_FROG_POS_OFFSET 0x290 // Offset from cameraPtr to the frog position
-#define CAMERA_PID_OFFSET 0x1a0 // Offset from cameraPtr to the PIDs for position and rotation
-#define CAMERA_DELTA_TIME_OFFSET 0x324 // Offset from cameraPtr to deltaTime
-#define FROG_TURN_PID_OFFSET 0x88 // Offset from frogPtr to the yaw PID
+// PC specific includes
+#else
+#include <cmath>
+#include "symbols_pc.h"
+#include "mouse_utils.h"
+
+#endif
+
+// General includes
+#include <utility>
+#include "types.h"
+#include "kcC.h"
+#include "utils.h"
+#include "decl_macros.h"
+#include "damping.hpp"
 
 char* cameraPtr;
 char* frogPtr;
 
 // Free look
-float sensitivity = 1.0f;
+EXPORT_VAR float sensitivity = 1.0f;
 
-float freelookScaleX = 0.0090f;
-float freelookScaleY = -0.0077f;
+EXPORT_VAR float freelookScaleX = 0.0090f;
+EXPORT_VAR float freelookScaleY = -0.0077f;
 
-float freelookMaxSpeedX = 0.25f;
-float freelookMaxSpeedY = 0.25f;
+EXPORT_VAR float freelookMaxSpeedX = 0.25f;
+EXPORT_VAR float freelookMaxSpeedY = 0.25f;
 
 // Orbit
-float orbitScaleX = 0.012f;
-float orbitScaleY = -0.010f;
+EXPORT_VAR float orbitScaleX = 0.012f;
+EXPORT_VAR float orbitScaleY = -0.010f;
 
-float orbitMaxSpeedX = 0.5f;
-float orbitMaxSpeedY = 0.2f;
+EXPORT_VAR float orbitMaxSpeedX = 0.5f;
+EXPORT_VAR float orbitMaxSpeedY = 0.2f;
 
-float orbitYOffset = 0.2f;
+EXPORT_VAR float orbitYOffset = 0.2f;
 
-float orbitPitchClampOffset = 0.1f;
+EXPORT_VAR float orbitPitchClampOffset = 0.1f;
 
-float minOrbitDist = 0.2f;
-float maxOrbitDist = 4.0f;
-float orbitDist = maxOrbitDist;
+EXPORT_VAR float minOrbitDist = 0.2f;
+EXPORT_VAR float maxOrbitDist = 4.0f;
+EXPORT_VAR float orbitDist = maxOrbitDist;
 
-float orbitBumpDist = 0.15f;
-float orbitHalfFovW = 0.15f;
-float orbitHalfFovH = 0.07f;
+EXPORT_VAR float orbitBumpDist = 0.15f;
+EXPORT_VAR float orbitHalfFovW = 0.15f;
+EXPORT_VAR float orbitHalfFovH = 0.07f;
 
 Damper cameraYawDamper;
 Damper cameraPitchDamper;
-float cameraYaw = 0.0f; // These are separate variables so we can link to them in assembly more easily
-float cameraPitch = 0.5f;
+EXPORT_VAR float cameraYaw = 0.0f; // These are separate variables so we can link to them in assembly more easily
+EXPORT_VAR float cameraPitch = 0.5f;
 
-float frogNewYaw = 0.0f;
-float frogNewPitch = 0.0f;
-int queuedSpin = 0;
+EXPORT_VAR float frogNewYaw = 0.0f;
+EXPORT_VAR float frogNewPitch = 0.0f;
+EXPORT_VAR int queuedSpin = 0;
 
 Damper cameraFocusYDamper;
-float cameraFocusY = 0.0f;
+EXPORT_VAR float cameraFocusY = 0.0f;
 
 // Raycasting
-int castSteps = 10;
+EXPORT_VAR int castSteps = 10;
 
 // The expected values of surface info from debugging the original raycast code
 _kcSurfaceInfo surfaceInfo = { 0, 0x1F94A278, 0, 0 };
 
-// Raycast utility
+#ifdef PS2
+// Get the camera deltas from the analog stick
+
+std::pair<float, float> getCameraDeltas() {
+    return {analogStickRX-127, analogStickRY-127};
+}
+
+#else
+// Variables from the original game
+float& analogYInputNorm = *reinterpret_cast<float*>(0x004DC470);
+int& pressedKeysPtr = *reinterpret_cast<int*>(0x004DC44C);
+__declspec(dllexport) char*& gameSystemPtr = *reinterpret_cast<char**>(0x004e4528); // Reference to pointer of game system
+
+// Functions from the original game
+typedef int(__thiscall* raycastFnSig)(char* gameSystem, kcVector4* pPoint, kcVector4* pDirection, float* pDist, int _, unsigned int mask, unsigned int ignore, _kcSurfaceInfo* pReturnInfo);
+__declspec(dllexport) raycastFnSig raycast = reinterpret_cast<raycastFnSig>(0x00416750);
+
+#endif
+
+// Raycast from Frogger to the camera
 bool castRay(float dist, float pitch, float yaw) {
     kcVector4 origin = *reinterpret_cast<kcVector4*>(cameraPtr + CAMERA_FROG_POS_OFFSET);
     kcVector4 normal = {
@@ -68,10 +96,13 @@ bool castRay(float dist, float pitch, float yaw) {
     };
 
     int hit = raycast(
-        gameSystem,
+        gameSystemPtr,
         &origin,
         &normal,
         &dist,
+#ifndef PS2
+        0, // The raycast function signature seems to be different between PS2 and PC, with PC always expecting a zero before the mask
+#endif
         0x11001,
         0x2000000,
         &surfaceInfo
@@ -119,7 +150,7 @@ void bumpCamera() {
 }
 
 // Orbiting camera control with mouse
-extern "C" void orbitCamera(char* camera) {
+EXPORT_FUNC(void) orbitCamera(char* camera) {
     // Initialize state only one time
     ONCE {
         cameraFocusYDamper = Damper_new(0, 0.15f, 2.0f);
@@ -131,8 +162,9 @@ extern "C" void orbitCamera(char* camera) {
     float deltaTime = *reinterpret_cast<float*>(cameraPtr + CAMERA_DELTA_TIME_OFFSET);
 
     // Add mouse coordinates and clamp
-    cameraYaw += clamp(static_cast<float>(analogueStickRX - 127) * sensitivity * orbitScaleX * deltaTime, -orbitMaxSpeedX, orbitMaxSpeedX);
-    cameraPitch += clamp(static_cast<float>(analogueStickRY - 127) * sensitivity * orbitScaleY * deltaTime, -orbitMaxSpeedY, orbitMaxSpeedY);
+    auto cameraDeltas = getCameraDeltas();
+    cameraYaw += clamp(cameraDeltas.first * sensitivity * orbitScaleX * deltaTime, -orbitMaxSpeedX, orbitMaxSpeedX);
+    cameraPitch += clamp(cameraDeltas.second * sensitivity * orbitScaleY * deltaTime, -orbitMaxSpeedY, orbitMaxSpeedY);
 
     cameraYaw = wrapToPi(cameraYaw);
     cameraPitch = clamp(cameraPitch, orbitPitchClampOffset, PI - orbitPitchClampOffset);
@@ -175,12 +207,13 @@ extern "C" void orbitCamera(char* camera) {
 }
 
 // First-person freelook control with mouse
-extern "C" void freelookCamera() {
+EXPORT_FUNC(void) freelookCamera() {
     float deltaTime = *reinterpret_cast<float*>(cameraPtr + CAMERA_DELTA_TIME_OFFSET);
 
     // Add mouse coordinates and clamp
-    cameraYaw += clamp(static_cast<float>(analogueStickRX - 127) * sensitivity * freelookScaleX * deltaTime, -freelookMaxSpeedX, freelookMaxSpeedX);
-    cameraPitch += clamp(static_cast<float>(analogueStickRY - 127) * sensitivity * freelookScaleY * deltaTime, -freelookMaxSpeedY, freelookMaxSpeedY);
+    auto cameraDeltas = getCameraDeltas();
+    cameraYaw += clamp(cameraDeltas.first * sensitivity * freelookScaleX * deltaTime, -freelookMaxSpeedX, freelookMaxSpeedX);
+    cameraPitch += clamp(cameraDeltas.second * sensitivity * freelookScaleY * deltaTime, -freelookMaxSpeedY, freelookMaxSpeedY);
 
     cameraYaw = wrapToPi(cameraYaw);
     cameraPitch = clamp(cameraPitch, orbitPitchClampOffset, PI - orbitPitchClampOffset);
@@ -206,7 +239,7 @@ extern "C" void freelookCamera() {
 }
 
 // Due to the camera being weird and always resetting the rotation, we have to simulate moving forward for one frame to make it stick
-extern "C" void testApplyQueuedSpin() {
+EXPORT_FUNC(void) applyQueuedSpin() {
     if (queuedSpin) {
         // Set the PID parameters for Frogger's yaw rotation, so he turns away from the camera
         auto frogYawPid = reinterpret_cast<_kcPid*>(frogPtr + FROG_TURN_PID_OFFSET);
@@ -215,8 +248,8 @@ extern "C" void testApplyQueuedSpin() {
         frogYawPid->v = 0;
         frogYawPid->i = 0;
 
-        // Set the analogue input to forward, forcing Frogger to move forward a slight amount and rotate towards the camera
-        analogueStickLYNorm = 1.0f;
+        // Set the analog input to forward, forcing Frogger to move forward a slight amount and rotate towards the camera
+        analogYInputNorm = 1.0f;
 
         --queuedSpin;
     }

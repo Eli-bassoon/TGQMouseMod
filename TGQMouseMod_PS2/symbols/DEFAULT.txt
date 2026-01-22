@@ -2,11 +2,11 @@
 /* This is where you put your in-game global variables & functions */
 
 /* Gamepad: 0x3DA3D8 */
-analogueStickRX = 0x3da3ec; /* Left is 0, right is 255 */
-analogueStickRY = 0x3da3f0; /* Up is 0, down is 255 */
-analogueStickLYNorm = 0x3da3f8;
+analogStickRX = 0x3da3ec; /* Left is 0, right is 255 */
+analogStickRY = 0x3da3f0; /* Up is 0, down is 255 */
+analogYInputNorm = 0x3da3f8;
 
-gameSystem = 0x2181A8;
+gameSystemPtr = 0x2181A8;
 
 /* Functions */
 sinf = 0x00195750;

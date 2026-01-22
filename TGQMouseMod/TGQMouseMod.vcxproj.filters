@@ -15,16 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\injection_functions.h">
+    <ClInclude Include="..\TGQMouseMod_PS2\include\damping.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\hooking.h">
+    <ClInclude Include="..\TGQMouseMod_PS2\include\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\kcC.h">
+    <ClInclude Include="..\TGQMouseMod_PS2\include\kcC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\mod_functions.h">
+    <ClInclude Include="include\hooking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\injection_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\symbols_pc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TGQMouseMod_PS2\include\decl_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mouse_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,10 +44,19 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\mod_functions.cpp">
+    <ClCompile Include="src\injection_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\injection_functions.cpp">
+    <ClCompile Include="..\TGQMouseMod_PS2\src\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\TGQMouseMod_PS2\src\damping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\TGQMouseMod_PS2\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mouse_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

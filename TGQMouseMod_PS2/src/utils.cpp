@@ -1,5 +1,7 @@
-#include <utils.h>
+#include "utils.h"
 
+// Only define these if using PS2, otherwise use functions from cmath
+#ifdef PS2
 float fmin(float x, float y) {
     return (x < y) ? x : y;
 }
@@ -11,6 +13,11 @@ float fmax(float x, float y) {
 float fabs(float x) {
     return (x < 0) ? -x : x;
 }
+
+#else
+#include <cmath>
+
+#endif
 
 float clamp(float x, float min, float max) {
     return fmin(fmax(x, min), max);

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <symbols.h>
-#include <utils.h>
-
 // Here we define a damping struct
 // This is a struct, not a class, because weird initialization stuff happens and resets whatever values I normally give it
 // I create uninitialized structs in the main file, then initialize them once inside a function

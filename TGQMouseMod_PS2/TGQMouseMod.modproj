@@ -20,7 +20,7 @@
       "extracted_game_folder": "C:/Files/Programming/C++/FroggerTGQ",
       "main_executable": "SLUS_202.57.elf",
       "source_path": null,
-      "compiler_flags": "-O3 -fsingle-precision-constant",
+      "compiler_flags": "-O3 -fsingle-precision-constant -Wno-psabi",
       "is_single_file_mode": true,
       "single_file_path": "C:/Files/Programming/C++/FroggerTGQ/SLUS_202.57.elf",
       "section_maps": {

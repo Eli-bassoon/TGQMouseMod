@@ -136,7 +136,6 @@ label(code)
 label(return)
 
 newmem:
-push [esi+2f8]
 push esi
 call orbitCamera
 
@@ -365,7 +364,6 @@ label(code)
 label(return)
 
 newmem:
-push [esi+2f8]
 call freelookCamera
 
 code:
@@ -517,7 +515,7 @@ label(code)
 label(return)
 
 newmem:
-call testApplyQueuedSpin
+call applyQueuedSpin
 
 code:
   push -01
@@ -577,6 +575,13 @@ GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C
       <Address>captureCursor</Address>
     </CheatEntry>
     <CheatEntry>
+      <ID>122</ID>
+      <Description>"Mouse Sensitivity"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>sensitivity</Address>
+    </CheatEntry>
+    <CheatEntry>
       <ID>20</ID>
       <Description>"Pressed Keys"</Description>
       <ShowAsSigned>0</ShowAsSigned>
@@ -607,6 +612,7 @@ GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C
     <CheatEntry>
       <ID>117</ID>
       <Description>"Freelook Settings"</Description>
+      <Options moHideChildren="1"/>
       <GroupHeader>1</GroupHeader>
       <CheatEntries>
         <CheatEntry>
@@ -642,6 +648,7 @@ GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C
     <CheatEntry>
       <ID>118</ID>
       <Description>"Orbit Settings"</Description>
+      <Options moHideChildren="1"/>
       <GroupHeader>1</GroupHeader>
       <CheatEntries>
         <CheatEntry>
@@ -706,6 +713,13 @@ GreatQuest.exe.text+70353: 8B BE C8 00 00 00              - mov edi,[esi+000000C
       <Offsets>
         <Offset>2f8</Offset>
       </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>121</ID>
+      <Description>"Mouse Scaling"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>mouseScaling</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>112</ID>

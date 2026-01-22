@@ -1,5 +1,5 @@
-#include <damping.hpp>
-#include <utils.h>
+#include "damping.hpp"
+#include "utils.h"
 
 Damper Damper_new(float initVal, float p, float maxErr) {
     return Damper {

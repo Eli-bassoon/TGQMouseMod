@@ -17,13 +17,13 @@ If you are using a controller, you can skip this section.
 
 1. This controller map binds the spacebar to X. By default, spacebar pauses the game. We will remap pausing the game to P instead. With no game open, navigate to `Settings > Hotkeys > Speed > Toggle Pause` and change the value from Spacebar to P.
 
-   <img src="./images/ps2_setup/controller1.png" alt="Settings > Hotkeys" style="zoom:50%;" /><img src="./images/ps2_setup/controller2.png" alt="Hotkeys > Speed > Toggle Pause" style="zoom:50%;" />
+   <img src="./images/ps2_setup/controller1.webp" alt="Settings > Hotkeys" style="zoom:50%;" /><img src="./images/ps2_setup/controller2.webp" alt="Hotkeys > Speed > Toggle Pause" style="zoom:50%;" />
 
 2. Load the custom input map into PCSX2 by copying `TGQ.ini` to the input profiles folder of PCSX2, located by default at `%USERPROFILE%/Documents/PCSX2/inputprofiles` on Windows. Restart PCSX2 for the changes to take effect.
 
 3. Set the game to use this input map by right clicking the game from the home screen, then navigating to `Properties... > Summary > Input Profile` and changing it to "TGQ".
 
-   <img src="./images/ps2_setup/controller3.png" alt="Game > Properties..." style="zoom:50%;" /><img src="./images/ps2_setup/controller4.png" alt="Properties > Summary > Input Profile" style="zoom:50%;" />
+   <img src="./images/ps2_setup/controller3.webp" alt="Game > Properties..." style="zoom:50%;" /><img src="./images/ps2_setup/controller4.webp" alt="Properties > Summary > Input Profile" style="zoom:50%;" />
 
 4. Try playing the game with this profile without the mod installed to verify it is bound correctly. The mouse won't do anything yet, not until you install the mod. These are the keybinds I have chosen.
 
@@ -49,5 +49,5 @@ After getting the game to work with the new keybinds, it is now time to actually
 
 1. Copy the patch file `SLUS-20257_9206FE2A.TGQMouseMod.pnach` to the patches folder of PCSX2, located by default at `%USERPROFILE%/Documents/PCSX2/patches` on Windows.
 2. Activate the patch by right clicking the game from the home screen, then navigating to `Properties... > Patches` and ticking the box next to "TGQMouseMod". If it doesn't show up then click the "Reload Patches" button.
-3. Launch the game. **Important: The patch will not be applied to any existing save states**. You must launch the game from a fresh boot to apply the patch. However, any save states you create with the patch applied will still be patched after reloading the save state.
+3. Launch the game. **Important: The patch will not be applied to any existing save states by default**. You can apply it to existing save states if you go to the patch menu and toggle the checkbox while the game is running. Any save states you create with the patch applied will still be permanently patched after reloading the save state.
 

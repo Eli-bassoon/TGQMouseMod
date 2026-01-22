@@ -65,6 +65,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)TGQMouseMod\include;$(SolutionDir)TGQMouseMod_PS2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -82,6 +83,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)TGQMouseMod\include;$(SolutionDir)TGQMouseMod_PS2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,6 +104,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)TGQMouseMod\include;$(SolutionDir)TGQMouseMod_PS2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,15 +117,22 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\hooking.h" />
-    <ClInclude Include="src\injection_functions.h" />
-    <ClInclude Include="src\kcC.h" />
-    <ClInclude Include="src\mod_functions.h" />
+    <ClInclude Include="..\TGQMouseMod_PS2\include\damping.hpp" />
+    <ClInclude Include="..\TGQMouseMod_PS2\include\decl_macros.h" />
+    <ClInclude Include="..\TGQMouseMod_PS2\include\kcC.h" />
+    <ClInclude Include="..\TGQMouseMod_PS2\include\utils.h" />
+    <ClInclude Include="include\hooking.h" />
+    <ClInclude Include="include\injection_functions.h" />
+    <ClInclude Include="include\symbols_pc.h" />
+    <ClInclude Include="include\mouse_utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\TGQMouseMod_PS2\src\damping.cpp" />
+    <ClCompile Include="..\TGQMouseMod_PS2\src\main.cpp" />
+    <ClCompile Include="..\TGQMouseMod_PS2\src\utils.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="src\injection_functions.cpp" />
-    <ClCompile Include="src\mod_functions.cpp" />
+    <ClCompile Include="src\mouse_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
