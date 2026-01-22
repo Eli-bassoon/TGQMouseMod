@@ -38,16 +38,16 @@ There are two methods to use this mod on PC: 1) Cheat Engine, and 2) Standalone 
 
 1. Download [Cheat Engine](https://www.cheatengine.org)
 2. Launch The Great Quest and attach Cheat Engine to the process
-3. Load the provided cheat table from the release you downloaded, located at `TGQMouseMod/PC/TGQMouseMod_CE/TGQMouseMod.CT` after you unpack the zip file. By default no tweaks are enabled.
+3. Load the provided cheat table from the release you downloaded, located at `TGQMouseMod/PC/CheatEngine/TGQMouseMod.CT` after you unpack the zip file. By default no tweaks are enabled.
 4. Click the checkbox called "Tweaks - ENABLE ME" to enable all tweaks.
 
 All tweaks can be individually enabled or disabled for testing purposes. Below the tweaks menu are numerous debug options and configuration settings. If you want to change mouse sensitivity you can modify the "Scale" and "Speed" values. Higher scales yield lower mouse sensitivity, lower speed values limit the maximum rotation each frame.
 
 ### 2) Standalone DLL
 
-1. Find the standalone DLL and injector exe in the release you downloaded, located inside `TGQMouseMod/PC/TGQMouseMod_Autoinject` after you unpack the zip file.
-2. Put Injector.exe and TGQMouseMod.dll in the same folder as where you have The Great Quest installed. Make sure you are using the right DLL, which is in the same folder as Injector.exe.
-3. Run Injector.exe. **If your Antivirus flags it, it is a false positive.**
+1. Find the standalone DLL and launcher exe in the release you downloaded, located inside `TGQMouseMod/PC/ModLauncher` after you unpack the zip file.
+2. Put ModLauncher.exe and TGQMouseMod.dll in the same folder as where you have The Great Quest installed. Make sure you are using the right DLL, which is in the same folder as ModLauncher.exe.
+3. Run ModLauncher.exe. **If your Antivirus flags it, it is a false positive.**
 
 You can inject the DLL using any method you like, including Cheat Engine. I have provided an injector if you don't want to download anything else.
 
