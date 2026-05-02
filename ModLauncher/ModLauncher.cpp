@@ -3,21 +3,40 @@
 #include    <windows.h>
 #include    <iostream>
 
+#ifndef DLL_PATH
+#define DLL_PATH "TGQMouseMod.dll"
+#endif
+
 // From https://everthessel.nl/blog/dll-injection-function-hooking/
 int main(int argc, char* argv[])
 {
-	// The user can pass in a path to the executable. By default, it assumes the exe is in the same directory as the injector.
+	// We can take up to 2 arguments, the first is the executable path and the second is the dll path to inject
+	if (argc > 3) {
+		std::cerr << "Enter no more than 2 arguments\n";
+		return 1;
+	}
+
+	// The second argument is the dll path
+	const char* dll;
+	if (argc > 2) {
+		dll = argv[2];
+	}
+	else {
+		dll = DLL_PATH;
+	}
+
+	// The first argument is the exe path
 	const char* exe;
 	if (argc == 1) {
 		exe = "GreatQuest.exe";
 	}
-	else if (argc == 2) {
+	else {
 		std::string arg1 = std::string(argv[1]);
 		// See if the user is asking for help
 		if (arg1 == "help" || arg1 == "h" || arg1 == "--help" || arg1 == "-h") {
-			std::cout << "Injector - Inject TGQMouseMod into the Great Quest executable" << std::endl;
+			std::cout << "ModLauncher - Inject TGQMouseMod into the Great Quest executable" << std::endl;
 			std::cout << "Usage:" << std::endl;
-			std::cout << "\tInjector.exe [path]" << std::endl;
+			std::cout << "\tModLauncher.exe [path]" << std::endl;
 			std::cout << "With no arguments passed, assume that the injector is placed in the same folder as the executable." << std::endl;
 			return 0;
 		}
@@ -26,12 +45,6 @@ int main(int argc, char* argv[])
 			exe = argv[1];
 		}
 	}
-	else {
-		std::cerr << "Please enter only one argument for the executable path.";
-		return 1;
-	}
-	// Path to our application
-	const char* dll = "TGQMouseMod.dll";
 
 	// Arguments for our application, including name of the executable itself
 	char args[20] = "GreatQuest.exe";
@@ -157,7 +170,7 @@ int main(int argc, char* argv[])
 			// Resume the patched application
 			ResumeThread(ProcessInformation.hThread);
 
-			std::cout << "Successfully injected DLL\n";
+			std::cout << "Successfully injected " << dll << std::endl;
 		}
 		catch (...) {
 			// An error occurred, kill the spawned process
