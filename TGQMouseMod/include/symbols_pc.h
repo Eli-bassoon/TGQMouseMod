@@ -11,7 +11,7 @@ __declspec(dllexport) extern int queuedSpin;
 
 #define CAMERA_FROG_POS_OFFSET 0x268 // Offset from cameraPtr to the frog position
 #define CAMERA_PID_OFFSET 0x178 // Offset from cameraPtr to the PIDs for position and rotation
-#define CAMERA_DELTA_TIME_OFFSET 0x2f8 // Offset from frogPtr to the yaw PID
+#define CAMERA_DELTA_TIME_OFFSET 0x2f8 // Offset from the cameraPtr to the delta time
 #define FROG_TURN_PID_OFFSET 0x88 // Offset from frogPtr to the yaw PID
 
 // Injected functions
