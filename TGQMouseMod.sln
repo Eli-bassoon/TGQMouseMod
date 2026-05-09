@@ -12,6 +12,7 @@ Global
 		Autoinject|x86 = Autoinject|x86
 		Debug|x86 = Debug|x86
 		DevConsoleAutoinject|x86 = DevConsoleAutoinject|x86
+		Proxied|x86 = Proxied|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -21,6 +22,8 @@ Global
 		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.Debug|x86.Build.0 = Debug|Win32
 		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.DevConsoleAutoinject|x86.ActiveCfg = DevConsoleAutoinject|Win32
 		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.DevConsoleAutoinject|x86.Build.0 = DevConsoleAutoinject|Win32
+		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.Proxied|x86.ActiveCfg = Proxied|Win32
+		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.Proxied|x86.Build.0 = Proxied|Win32
 		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.Release|x86.ActiveCfg = Release|Win32
 		{FD47C29F-D26B-4E2F-86D4-52F54EE1B18B}.Release|x86.Build.0 = Release|Win32
 		{F38E2A9D-52B7-422A-94E0-403D49F14235}.Autoinject|x86.ActiveCfg = Autoinject|Win32
@@ -29,6 +32,8 @@ Global
 		{F38E2A9D-52B7-422A-94E0-403D49F14235}.Debug|x86.Build.0 = Debug|Win32
 		{F38E2A9D-52B7-422A-94E0-403D49F14235}.DevConsoleAutoinject|x86.ActiveCfg = DevConsoleAutoinject|Win32
 		{F38E2A9D-52B7-422A-94E0-403D49F14235}.DevConsoleAutoinject|x86.Build.0 = DevConsoleAutoinject|Win32
+		{F38E2A9D-52B7-422A-94E0-403D49F14235}.Proxied|x86.ActiveCfg = Proxied|Win32
+		{F38E2A9D-52B7-422A-94E0-403D49F14235}.Proxied|x86.Build.0 = Proxied|Win32
 		{F38E2A9D-52B7-422A-94E0-403D49F14235}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution

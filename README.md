@@ -32,9 +32,15 @@ The game is notorious for having an awful camera that constantly loses sight of 
 
 It is assumed you already can run the PC port of Frogger: The Great Quest on Windows.
 
-There are two methods to use this mod on PC: 1) Cheat Engine, and 2) Standalone DLL injection
+There are two methods to use this mod on PC: 1) Proxy DLL, and 2) Cheat Engine
 
-### 1) Cheat Engine
+### 1) Proxy DLL (Recommended)
+
+1. Find the DLL in the release you downloaded, located inside `TGQMouseMod/PC/Proxied/dsound.dll` after you unpack the zip file.
+2. Put dsound.dll in the same folder as where you have The Great Quest installed. Make sure that GreatQuest.exe and dsound.dll are in the same folder.
+3. Launch the game normally. The mod will automatically load itself.
+
+### 2) Cheat Engine (Advanced)
 
 1. Download [Cheat Engine](https://www.cheatengine.org)
 2. Launch The Great Quest and attach Cheat Engine to the process
@@ -42,14 +48,6 @@ There are two methods to use this mod on PC: 1) Cheat Engine, and 2) Standalone 
 4. Click the checkbox called "Tweaks - ENABLE ME" to enable all tweaks.
 
 All tweaks can be individually enabled or disabled for testing purposes. Below the tweaks menu are numerous debug options and configuration settings. If you want to change mouse sensitivity you can modify the "Mouse Sensitivity" value, which defaults to 1.
-
-### 2) Standalone DLL
-
-1. Find the standalone DLL and launcher exe in the release you downloaded, located inside `TGQMouseMod/PC/ModLauncher` after you unpack the zip file.
-2. Put ModLauncher.exe and TGQMouseMod.dll in the same folder as where you have The Great Quest installed. Make sure you are using the right DLL, which is in the same folder as ModLauncher.exe.
-3. Run ModLauncher.exe. **If your Antivirus flags it, it is a false positive.**
-
-You can inject the DLL using any method you like, including Cheat Engine. I have provided an injector if you don't want to download anything else.
 
 ## PS2 Usage
 

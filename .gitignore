@@ -23,6 +23,7 @@ mono_crash.*
 [Rr]eleases/
 Autoinject/
 DevConsoleAutoinject/
+Proxied/
 x64/
 x86/
 [Ww][Ii][Nn]32/
